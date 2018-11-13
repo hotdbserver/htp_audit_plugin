@@ -1,0 +1,13 @@
+[general]
+audit_file=htp_audit.log
+audit_error_file=htp_audit_error.log
+enable_buffer=1
+
+#[audit rule]
+#name=rule1
+#user=root
+#host=192.168
+#event=connection:connect;connection:disconnect;general:status;general:error
+#command=query
+#sql_command=set_option
+#sql_keyword=names
