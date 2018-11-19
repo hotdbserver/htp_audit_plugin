@@ -14,7 +14,6 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 */
-
 #include <stdio.h>
 #include <time.h>
 #include <my_global.h>
@@ -161,7 +160,7 @@ void audit_connection_change_user(const struct mysql_event_connection *event)
 
 void audit_connection_pre_authenticate(const struct mysql_event_connection *event)
 {
-  DBUG_ASSERT(event->event_subclass == MYSQL_AUDIT_CONNECTION_AUTHENTICATE);
+  DBUG_ASSERT(event->event_subclass == MYSQL_AUDIT_CONNECTION_PRE_AUTHENTICATE);
 
   char current_str[100];
   //to do : 获取当前时间
@@ -200,7 +199,7 @@ void audit_connection_pre_authenticate(const struct mysql_event_connection *even
   普通类型，对应plugin_audit.h中的general class
 */
 /*
-  
+
  */
 void audit_general_log(const struct mysql_event_general *event)
 {

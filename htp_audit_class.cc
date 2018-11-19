@@ -14,13 +14,13 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 */
-
 #include <stdio.h>
 #include <string.h>
 #include <my_global.h>
 #include <mysql/plugin.h>
 #include <mysql/plugin_audit.h>
 #include <sql_plugin.h>
+//#include "htp_audit.h"
 #include <list>
 #include <ctype.h>
 #include <string>
@@ -37,8 +37,7 @@ static void htp_audit_general_event_get_user(const char *general_user, char *use
 {
   int len = strlen(general_user);
   int user_len = 0;
-  for (int i = 0; i < len; i++)
-  {
+  for (int i = 0; i < len; i++) {
     if (general_user[i] == '[')
       break;
 
@@ -66,8 +65,7 @@ static int htp_audit_process_general_event(
   info.query = event_general->general_query.str;
   info.sql_command = event_general->general_sql_command.str;
   //统计调用次数
-  switch (event_general->event_subclass)
-  {
+  switch (event_general->event_subclass) {
     case MYSQL_AUDIT_GENERAL_LOG:
       number_of_calls_general_log_incr();
       break;
@@ -84,15 +82,13 @@ static int htp_audit_process_general_event(
       break;
   }
 
-  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT)
-  {
+  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT) {
     return 0;
   }
 
   number_of_records_incr();
   //进行审计
-  switch (event_general->event_subclass)
-  {
+  switch (event_general->event_subclass) {
     case MYSQL_AUDIT_GENERAL_LOG:
       number_of_records_general_log_incr();
       audit_general_log(event_general);
@@ -128,8 +124,7 @@ static int htp_audit_process_connection_event(
   info.main_class = MYSQL_AUDIT_CONNECTION_CLASS;
   info.sub_class = event_connection->event_subclass;
 
-  switch (event_connection->event_subclass)
-  {
+  switch (event_connection->event_subclass) {
     case MYSQL_AUDIT_CONNECTION_CONNECT:
       number_of_calls_connection_connect_incr();
       break;
@@ -146,14 +141,12 @@ static int htp_audit_process_connection_event(
       break;
   }
 
-  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT)
-  {
+  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT) {
     return 0;
   }
 
   number_of_records_incr();
-  switch (event_connection->event_subclass)
-  {
+  switch (event_connection->event_subclass) {
     case MYSQL_AUDIT_CONNECTION_CONNECT:
       number_of_records_connection_connect_incr();
       audit_connection_connect(event_connection);
@@ -185,8 +178,7 @@ static int htp_audit_process_parse_event(
   info.main_class = MYSQL_AUDIT_PARSE_CLASS;
   info.sub_class = event_parse->event_subclass;
   info.query = event_parse->query.str;
-  switch (event_parse->event_subclass)
-  {
+  switch (event_parse->event_subclass) {
     case MYSQL_AUDIT_PARSE_PREPARSE:
       number_of_calls_parse_preparse_incr();
       break;
@@ -196,13 +188,11 @@ static int htp_audit_process_parse_event(
     default:
       break;
   }
-  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT)
-  {
+  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT) {
     return 0;
   }
   number_of_records_incr();
-  switch (event_parse->event_subclass)
-  {
+  switch (event_parse->event_subclass) {
     case MYSQL_AUDIT_PARSE_PREPARSE:
       audit_parse_preparse(event_parse);
       number_of_records_parse_preparse_incr();
@@ -239,8 +229,7 @@ htp_audit_process_auth_event(
   info.database = event_grant->database.str;
   info.table = event_grant->table.str;
 
-  switch (event_grant->event_subclass)
-  {
+  switch (event_grant->event_subclass) {
     case MYSQL_AUDIT_AUTHORIZATION_USER:
       audit_authorization_user(event_grant);
       number_of_calls_authorization_user_incr();
@@ -268,13 +257,11 @@ htp_audit_process_auth_event(
     default:
       break;
   }
-  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT)
-  {
+  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT) {
     return 0;
   }
 
-  switch (event_grant->event_subclass)
-  {
+  switch (event_grant->event_subclass) {
     case MYSQL_AUDIT_AUTHORIZATION_USER:
       audit_authorization_user(event_grant);
       number_of_records_authorization_user_incr();
@@ -328,8 +315,7 @@ htp_audit_process_shutdown_event(
   info.sub_class = event_shutdown->event_subclass;
   number_of_calls_server_shutdown_incr();
 
-  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT)
-  {
+  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT) {
     return 0;
   }
   number_of_records_server_shutdown_incr();
@@ -351,8 +337,7 @@ htp_audit_process_stored_program_event(
   info.name = event_stored_program->name.str;
 
   number_of_calls_stored_program_incr();
-  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT)
-  {
+  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT) {
     return 0;
   }
   audit_stored_program_event(event_stored_program);
@@ -374,8 +359,7 @@ static int htp_audit_process_command_event(
   info.main_class = MYSQL_AUDIT_COMMAND_CLASS;
   info.sub_class = event_command->event_subclass;
 
-  switch (event_command->event_subclass)
-  {
+  switch (event_command->event_subclass) {
     case MYSQL_AUDIT_COMMAND_START:
       number_of_calls_command_start_incr();
       break;
@@ -385,13 +369,11 @@ static int htp_audit_process_command_event(
     default:
       break;
   }
-  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT)
-  {
+  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT) {
     return 0;
   }
 
-  switch (event_command->event_subclass)
-  {
+  switch (event_command->event_subclass) {
     case MYSQL_AUDIT_COMMAND_START:
       audit_command_start(event_command);
       number_of_records_command_start_incr();
@@ -416,8 +398,7 @@ static int htp_audit_process_query_event(
   info.main_class = MYSQL_AUDIT_QUERY_CLASS;
   info.sub_class = event_query->event_subclass;
 
-  switch (event_query->event_subclass)
-  {
+  switch (event_query->event_subclass) {
     case MYSQL_AUDIT_QUERY_START:
       number_of_calls_query_start_incr();
       break;
@@ -433,13 +414,11 @@ static int htp_audit_process_query_event(
     default:
       break;
   }
-  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT)
-  {
+  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT) {
     return 0;
   }
 
-  switch (event_query->event_subclass)
-  {
+  switch (event_query->event_subclass) {
     case MYSQL_AUDIT_QUERY_START:
       audit_query_start(event_query);
       number_of_records_query_start_incr();
@@ -474,8 +453,7 @@ static int htp_audit_process_table_access_event(MYSQL_THD thd __attribute__((unu
   info.main_class = MYSQL_AUDIT_TABLE_ACCESS_CLASS;
   info.sub_class = event_table->event_subclass;
 
-  switch (event_table->event_subclass)
-  {
+  switch (event_table->event_subclass) {
     case MYSQL_AUDIT_TABLE_ACCESS_INSERT:
       number_of_calls_table_access_insert_incr();
       break;
@@ -491,12 +469,10 @@ static int htp_audit_process_table_access_event(MYSQL_THD thd __attribute__((unu
     default:
       break;
   }
-  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT)
-  {
+  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT) {
     return 0;
   }
-  switch (event_table->event_subclass)
-  {
+  switch (event_table->event_subclass) {
     case MYSQL_AUDIT_TABLE_ACCESS_INSERT:
       audit_table_access_insert(event_table);
       number_of_records_table_access_insert_incr();
@@ -543,8 +519,7 @@ static int htp_audit_process_variable_event(MYSQL_THD thd __attribute__((unused)
   info.main_class = MYSQL_AUDIT_GLOBAL_VARIABLE_CLASS;
   info.sub_class = event_gvar->event_subclass;
 
-  switch (event_gvar->event_subclass)
-  {
+  switch (event_gvar->event_subclass) {
     case MYSQL_AUDIT_GLOBAL_VARIABLE_GET:
       number_of_calls_global_variable_get_incr();
       break;
@@ -554,12 +529,10 @@ static int htp_audit_process_variable_event(MYSQL_THD thd __attribute__((unused)
     default:
       break;
   }
-  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT)
-  {
+  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT) {
     return 0;
   }
-  switch (event_gvar->event_subclass)
-  {
+  switch (event_gvar->event_subclass) {
     case MYSQL_AUDIT_GLOBAL_VARIABLE_GET:
 
       audit_global_variable_get(event_gvar);
@@ -579,8 +552,7 @@ void htp_audit_process_event(MYSQL_THD thd __attribute__((unused)),
                              unsigned int event_class,
                              const void *event)
 {
-  switch (event_class)
-  {
+  switch (event_class) {
     case MYSQL_AUDIT_GENERAL_CLASS:
       htp_audit_process_general_event(thd, event_class, event);
       break;

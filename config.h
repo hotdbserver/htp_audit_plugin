@@ -14,7 +14,6 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 */
-
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
@@ -68,15 +67,13 @@ extern "C" { /* Assume C declarations for C++   */
 //#define HTP_AUDIT_CONFIG_FILE "htp_audit.cnf"
 
 
-struct config_err_struct
-{
+struct config_err_struct {
   int err_no;   //出现错误时的错误号，0表示无错误
   int line_no;  //出现错误时的行号
 };
 typedef struct config_err_struct config_err_t;
 
-struct config_item_struct
-{
+struct config_item_struct {
   char key[KEY_BUFFER_SIZE];
   int key_len;
   char value[VALUE_BUFFER_SIZE];
@@ -85,8 +82,7 @@ struct config_item_struct
 };
 typedef struct config_item_struct config_item_t;
 
-struct config_group_struct
-{
+struct config_group_struct {
   char name[GROUP_NAME_BUFFER_SIZE];
   int name_len;
   int number; /*0-based。配置文件中，该group的位置。第一个配置组的值为0*/
@@ -95,8 +91,7 @@ struct config_group_struct
 };
 typedef struct config_group_struct config_group_t;
 
-struct config_struct
-{
+struct config_struct {
   config_group_t anonymous; /*在没有指定任何group的配置项，存放在这里*/
   int group_amount; /*配置的文件中的group数目*/
   config_group_t *groups;

@@ -143,8 +143,7 @@ static void htp_audit_rule_2_str(
   strcpy(buffer_index, item->name);
   buffer_index += strlen(item->name);
   //host
-  if (item->host_length != 0)
-  {
+  if (item->host_length != 0) {
     strcpy(buffer_index, "\n");
     buffer_index += 1;
     strcpy(buffer_index, HTP_AUDIT_RULE_KEY_HOST);
@@ -155,8 +154,7 @@ static void htp_audit_rule_2_str(
     buffer_index += item->host_length;
   }
   //user
-  if (item->user_length != 0)
-  {
+  if (item->user_length != 0) {
     strcpy(buffer_index, "\n");
     buffer_index += 1;
     strcpy(buffer_index, HTP_AUDIT_RULE_KEY_USER);
@@ -169,23 +167,20 @@ static void htp_audit_rule_2_str(
   //event
   strcpy(buffer_index, "\n");
   buffer_index += 1;
-  if (item->audit_all_event == true)
-  {
+  if (item->audit_all_event == true) {
     //all event setted
     const char *audit_all = "event=all";
     strcpy(buffer_index, audit_all);
     buffer_index += strlen(audit_all);
   }
-  else
-  {
+  else {
     const char *event_head = "event={";
     strcpy(buffer_index, event_head);
     buffer_index += strlen(event_head);
     bool need_semicolon = false;
 
     //general event
-    if (item->audit_all_general)
-    {
+    if (item->audit_all_general) {
       const char *all_general = HTP_AUDIT_EVENT_GENERAL_CLASS;
       strcpy(buffer_index, all_general);
       buffer_index += strlen(all_general);
@@ -193,17 +188,14 @@ static void htp_audit_rule_2_str(
       buffer_index++;
       need_semicolon = true;
     }
-    else
-    {
+    else {
       need_semicolon = false;
       strcpy(buffer_index, HTP_AUDIT_EVENT_GENERAL_CLASS);
       buffer_index += strlen(HTP_AUDIT_EVENT_GENERAL_CLASS);
       strcpy(buffer_index, ":");
       buffer_index++;
-      for (int i = 0; i < MAX_FILTER_GENERAL_EVENTS; i++)
-      {
-        if (item->general_events[i] == EVENT_SETTED)
-        {
+      for (int i = 0; i < MAX_FILTER_GENERAL_EVENTS; i++) {
+        if (item->general_events[i] == EVENT_SETTED) {
           //  if (need_semicolon) {
           //    strcpy(buffer_index, ";");
           //   buffer_index++;
@@ -216,14 +208,12 @@ static void htp_audit_rule_2_str(
         }
       }
     }
-    if (need_semicolon)
-    {
+    if (need_semicolon) {
       buffer_index--;
       strcpy(buffer_index, "};{");
       buffer_index += 3;
     }
-    else
-    {
+    else {
       buffer_index--;
       buffer_index -= strlen(HTP_AUDIT_EVENT_GENERAL_CLASS);
       *buffer_index = 0;
@@ -232,8 +222,7 @@ static void htp_audit_rule_2_str(
     need_semicolon = false;
 
     //connection event
-    if (item->audit_all_connection)
-    {
+    if (item->audit_all_connection) {
       const char *all_connection = HTP_AUDIT_EVENT_CONNECTION_CLASS;
       strcpy(buffer_index, all_connection);
       buffer_index += strlen(all_connection);
@@ -241,16 +230,13 @@ static void htp_audit_rule_2_str(
       buffer_index++;
       need_semicolon = true;
     }
-    else
-    {
+    else {
       strcpy(buffer_index, HTP_AUDIT_EVENT_CONNECTION_CLASS);
       buffer_index += strlen(HTP_AUDIT_EVENT_CONNECTION_CLASS);
       strcpy(buffer_index, ":");
       buffer_index++;
-      for (int i = 0; i < MAX_FILTER_CONNECTION_EVENTS; i++)
-      {
-        if (item->connection_events[i] == EVENT_SETTED)
-        {
+      for (int i = 0; i < MAX_FILTER_CONNECTION_EVENTS; i++) {
+        if (item->connection_events[i] == EVENT_SETTED) {
           //  if (need_semicolon) {
           //    strcpy(buffer_index, ";");
           //   buffer_index++;
@@ -263,14 +249,12 @@ static void htp_audit_rule_2_str(
         }
       }
     }
-    if (need_semicolon)
-    {
+    if (need_semicolon) {
       buffer_index--;
       strcpy(buffer_index, "};{");
       buffer_index += 3;
     }
-    else
-    {
+    else {
       buffer_index--;
       buffer_index -= strlen(HTP_AUDIT_EVENT_CONNECTION_CLASS);
       *buffer_index = 0;
@@ -279,8 +263,7 @@ static void htp_audit_rule_2_str(
     need_semicolon = false;
 
     //parse event
-    if (item->audit_all_parse)
-    {
+    if (item->audit_all_parse) {
       const char *all_parse = HTP_AUDIT_EVENT_PARSE_CLASS;
       strcpy(buffer_index, all_parse);
       buffer_index += strlen(all_parse);
@@ -288,16 +271,13 @@ static void htp_audit_rule_2_str(
       buffer_index++;
       need_semicolon = true;
     }
-    else
-    {
+    else {
       strcpy(buffer_index, HTP_AUDIT_EVENT_PARSE_CLASS);
       buffer_index += strlen(HTP_AUDIT_EVENT_PARSE_CLASS);
       strcpy(buffer_index, ":");
       buffer_index++;
-      for (int i = 0; i < MAX_FILTER_PARSE_EVENTS; i++)
-      {
-        if (item->parse_events[i] == EVENT_SETTED)
-        {
+      for (int i = 0; i < MAX_FILTER_PARSE_EVENTS; i++) {
+        if (item->parse_events[i] == EVENT_SETTED) {
           //  if (need_semicolon) {
           //    strcpy(buffer_index, ";");
           //   buffer_index++;
@@ -311,14 +291,12 @@ static void htp_audit_rule_2_str(
       }
     }
 
-    if (need_semicolon)
-    {
+    if (need_semicolon) {
       buffer_index--;
       strcpy(buffer_index, "};{");
       buffer_index += 3;
     }
-    else
-    {
+    else {
       buffer_index--;
       buffer_index -= strlen(HTP_AUDIT_EVENT_PARSE_CLASS);
       *buffer_index = 0;
@@ -327,8 +305,7 @@ static void htp_audit_rule_2_str(
     need_semicolon = false;
 
     //authorization event
-    if (item->audit_all_authorization)
-    {
+    if (item->audit_all_authorization) {
       const char *all_authorization = HTP_AUDIT_EVENT_AUTHORIZATION_CLASS;
       strcpy(buffer_index, all_authorization);
       buffer_index += strlen(all_authorization);
@@ -336,16 +313,13 @@ static void htp_audit_rule_2_str(
       buffer_index++;
       need_semicolon = true;
     }
-    else
-    {
+    else {
       strcpy(buffer_index, HTP_AUDIT_EVENT_AUTHORIZATION_CLASS);
       buffer_index += strlen(HTP_AUDIT_EVENT_AUTHORIZATION_CLASS);
       strcpy(buffer_index, ":");
       buffer_index++;
-      for (int i = 0; i < MAX_FILTER_AUTHORIZATION_EVENTS; i++)
-      {
-        if (item->authorization_events[i] == EVENT_SETTED)
-        {
+      for (int i = 0; i < MAX_FILTER_AUTHORIZATION_EVENTS; i++) {
+        if (item->authorization_events[i] == EVENT_SETTED) {
           //  if (need_semicolon) {
           //    strcpy(buffer_index, ";");
           //   buffer_index++;
@@ -359,14 +333,12 @@ static void htp_audit_rule_2_str(
       }
     }
 
-    if (need_semicolon)
-    {
+    if (need_semicolon) {
       buffer_index--;
       strcpy(buffer_index, "};{");
       buffer_index += 3;
     }
-    else
-    {
+    else {
       buffer_index--;
       buffer_index -= strlen(HTP_AUDIT_EVENT_AUTHORIZATION_CLASS);
       *buffer_index = 0;
@@ -375,8 +347,7 @@ static void htp_audit_rule_2_str(
     need_semicolon = false;
 
     //table_access event
-    if (item->audit_all_table_access)
-    {
+    if (item->audit_all_table_access) {
       const char *all_table_access = HTP_AUDIT_EVENT_TABLE_ACCESS_CLASS;
       strcpy(buffer_index, all_table_access);
       buffer_index += strlen(all_table_access);
@@ -384,16 +355,13 @@ static void htp_audit_rule_2_str(
       buffer_index++;
       need_semicolon = true;
     }
-    else
-    {
+    else {
       strcpy(buffer_index, HTP_AUDIT_EVENT_TABLE_ACCESS_CLASS);
       buffer_index += strlen(HTP_AUDIT_EVENT_TABLE_ACCESS_CLASS);
       strcpy(buffer_index, ":");
       buffer_index++;
-      for (int i = 0; i < MAX_FILTER_TABLE_ACCESS_EVENTS; i++)
-      {
-        if (item->table_access_events[i] == EVENT_SETTED)
-        {
+      for (int i = 0; i < MAX_FILTER_TABLE_ACCESS_EVENTS; i++) {
+        if (item->table_access_events[i] == EVENT_SETTED) {
           //  if (need_semicolon) {
           //    strcpy(buffer_index, ";");
           //   buffer_index++;
@@ -407,14 +375,12 @@ static void htp_audit_rule_2_str(
       }
     }
 
-    if (need_semicolon)
-    {
+    if (need_semicolon) {
       buffer_index--;
       strcpy(buffer_index, "};{");
       buffer_index += 3;
     }
-    else
-    {
+    else {
       buffer_index--;
       buffer_index -= strlen(HTP_AUDIT_EVENT_TABLE_ACCESS_CLASS);
       *buffer_index = 0;
@@ -423,8 +389,7 @@ static void htp_audit_rule_2_str(
     need_semicolon = false;
 
     //global_variable event
-    if (item->audit_all_global_variable)
-    {
+    if (item->audit_all_global_variable) {
       const char *all_global_variable = HTP_AUDIT_EVENT_GLOBAL_VARIABLE_CLASS;
       strcpy(buffer_index, all_global_variable);
       buffer_index += strlen(all_global_variable);
@@ -432,16 +397,13 @@ static void htp_audit_rule_2_str(
       buffer_index++;
       need_semicolon = true;
     }
-    else
-    {
+    else {
       strcpy(buffer_index, HTP_AUDIT_EVENT_GLOBAL_VARIABLE_CLASS);
       buffer_index += strlen(HTP_AUDIT_EVENT_GLOBAL_VARIABLE_CLASS);
       strcpy(buffer_index, ":");
       buffer_index++;
-      for (int i = 0; i < MAX_FILTER_GLOBAL_VARIABLE_EVENTS; i++)
-      {
-        if (item->global_variable_events[i] == EVENT_SETTED)
-        {
+      for (int i = 0; i < MAX_FILTER_GLOBAL_VARIABLE_EVENTS; i++) {
+        if (item->global_variable_events[i] == EVENT_SETTED) {
           //  if (need_semicolon) {
           //    strcpy(buffer_index, ";");
           //   buffer_index++;
@@ -455,14 +417,12 @@ static void htp_audit_rule_2_str(
       }
     }
 
-    if (need_semicolon)
-    {
+    if (need_semicolon) {
       buffer_index--;
       strcpy(buffer_index, "};{");
       buffer_index += 3;
     }
-    else
-    {
+    else {
       buffer_index--;
       buffer_index -= strlen(HTP_AUDIT_EVENT_GLOBAL_VARIABLE_CLASS);
       *buffer_index = 0;
@@ -470,8 +430,7 @@ static void htp_audit_rule_2_str(
     need_semicolon = false;
 
     //command event
-    if (item->audit_all_command)
-    {
+    if (item->audit_all_command) {
       const char *all_command = HTP_AUDIT_EVENT_COMMAND_CLASS;
       strcpy(buffer_index, all_command);
       buffer_index += strlen(all_command);
@@ -479,16 +438,13 @@ static void htp_audit_rule_2_str(
       buffer_index++;
       need_semicolon = true;
     }
-    else
-    {
+    else {
       strcpy(buffer_index, HTP_AUDIT_EVENT_COMMAND_CLASS);
       buffer_index += strlen(HTP_AUDIT_EVENT_COMMAND_CLASS);
       strcpy(buffer_index, ":");
       buffer_index++;
-      for (int i = 0; i < MAX_FILTER_COMMAND_EVENTS; i++)
-      {
-        if (item->command_events[i] == EVENT_SETTED)
-        {
+      for (int i = 0; i < MAX_FILTER_COMMAND_EVENTS; i++) {
+        if (item->command_events[i] == EVENT_SETTED) {
           //  if (need_semicolon) {
           //    strcpy(buffer_index, ";");
           //   buffer_index++;
@@ -502,14 +458,12 @@ static void htp_audit_rule_2_str(
       }
     }
 
-    if (need_semicolon)
-    {
+    if (need_semicolon) {
       buffer_index--;
       strcpy(buffer_index, "};{");
       buffer_index += 3;
     }
-    else
-    {
+    else {
       buffer_index--;
       buffer_index -= strlen(HTP_AUDIT_EVENT_COMMAND_CLASS);
       *buffer_index = 0;
@@ -518,8 +472,7 @@ static void htp_audit_rule_2_str(
     need_semicolon = false;
 
     //query event
-    if (item->audit_all_query)
-    {
+    if (item->audit_all_query) {
       const char *all_query = HTP_AUDIT_EVENT_QUERY_CLASS;
       strcpy(buffer_index, all_query);
       buffer_index += strlen(all_query);
@@ -527,16 +480,13 @@ static void htp_audit_rule_2_str(
       buffer_index++;
       need_semicolon = true;
     }
-    else
-    {
+    else {
       strcpy(buffer_index, HTP_AUDIT_EVENT_QUERY_CLASS);
       buffer_index += strlen(HTP_AUDIT_EVENT_QUERY_CLASS);
       strcpy(buffer_index, ":");
       buffer_index++;
-      for (int i = 0; i < MAX_FILTER_QUERY_EVENTS; i++)
-      {
-        if (item->query_events[i] == EVENT_SETTED)
-        {
+      for (int i = 0; i < MAX_FILTER_QUERY_EVENTS; i++) {
+        if (item->query_events[i] == EVENT_SETTED) {
           //  if (need_semicolon) {
           //    strcpy(buffer_index, ";");
           //   buffer_index++;
@@ -550,14 +500,12 @@ static void htp_audit_rule_2_str(
       }
     }
 
-    if (need_semicolon)
-    {
+    if (need_semicolon) {
       buffer_index--;
       strcpy(buffer_index, "};{");
       buffer_index += 3;
     }
-    else
-    {
+    else {
       buffer_index--;
       buffer_index -= strlen(HTP_AUDIT_EVENT_QUERY_CLASS);
       *buffer_index = 0;
@@ -567,14 +515,12 @@ static void htp_audit_rule_2_str(
 
     strcpy(buffer_index, HTP_AUDIT_EVENT_STARTUP_CLASS);
     buffer_index += strlen(HTP_AUDIT_EVENT_STARTUP_CLASS);
-    if (item->audit_event_startup)
-    {
+    if (item->audit_event_startup) {
       //need_semicolon=true;
       strcpy(buffer_index, "};{");
       buffer_index += 3;
     }
-    else
-    {
+    else {
       //buffer_index--;
       buffer_index -= strlen(HTP_AUDIT_EVENT_STARTUP_CLASS);
       *buffer_index = 0;
@@ -584,14 +530,12 @@ static void htp_audit_rule_2_str(
     strcpy(buffer_index, HTP_AUDIT_EVENT_SHUTDOWN_CLASS);
     buffer_index += strlen(HTP_AUDIT_EVENT_SHUTDOWN_CLASS);
 
-    if (item->audit_event_startup)
-    {
+    if (item->audit_event_startup) {
 //      need_semicolon=true;
       strcpy(buffer_index, "};{");
       buffer_index += 3;
     }
-    else
-    {
+    else {
       //buffer_index--;
       buffer_index -= strlen(HTP_AUDIT_EVENT_SHUTDOWN_CLASS);
       *buffer_index = 0;
@@ -600,21 +544,18 @@ static void htp_audit_rule_2_str(
     //need_semicolon=false;
     strcpy(buffer_index, HTP_AUDIT_EVENT_STORED_PROGRAM_CLASS);
     buffer_index += strlen(HTP_AUDIT_EVENT_STORED_PROGRAM_CLASS);
-    if (item->audit_event_stored_program)
-    {
+    if (item->audit_event_stored_program) {
       //buffer_index--;
       strcpy(buffer_index, "};{");
       buffer_index += 3;
     }
-    else
-    {
+    else {
       //buffer_index--;
       buffer_index -= strlen(HTP_AUDIT_EVENT_STORED_PROGRAM_CLASS);
       *buffer_index = 0;
     }
 
-    if (*(buffer_index - 1) == '{')
-    {
+    if (*(buffer_index - 1) == '{') {
       buffer_index -= 2;
       *buffer_index = 0;
     }
@@ -623,8 +564,7 @@ static void htp_audit_rule_2_str(
 
   }
   //command
-  if (item->command_length != 0)
-  {
+  if (item->command_length != 0) {
     strcpy(buffer_index, "\n");
     buffer_index += 1;
     strcpy(buffer_index, HTP_AUDIT_RULE_KEY_CMD);
@@ -635,8 +575,7 @@ static void htp_audit_rule_2_str(
     buffer_index += item->command_length;
   }
   //sql_command
-  if (item->sql_command_length != 0)
-  {
+  if (item->sql_command_length != 0) {
     strcpy(buffer_index, "\n");
     buffer_index += 1;
     strcpy(buffer_index, HTP_AUDIT_RULE_KEY_SQL_CMD);
@@ -647,8 +586,7 @@ static void htp_audit_rule_2_str(
     buffer_index += item->sql_command_length;
   }
   //sql_keyword
-  if (item->sql_keyword_length != 0)
-  {
+  if (item->sql_keyword_length != 0) {
     strcpy(buffer_index, "\n");
     buffer_index += 1;
     strcpy(buffer_index, HTP_AUDIT_RULE_KEY_SQL_KEYWORD);
@@ -665,8 +603,7 @@ static void htp_audit_rule_2_str(
 static void rules2str_buffer_write(const char *rule, rules2str_buffer_t *buffer)
 {
   int len = strlen(rule);
-  if ((buffer->occupied_bytes + len) >= buffer->buffer_size)
-  {
+  if ((buffer->occupied_bytes + len) >= buffer->buffer_size) {
     //TODO:重新分配空间
   }
   char *start = buffer->buffer + buffer->occupied_bytes;
@@ -681,8 +618,7 @@ static void htp_audit_rules_2_str(rules2str_buffer_t *buffer)
   rules2str_buffer_reset(buffer);
   list<int>::iterator it;
   filter_item_t *item;
-  for (it = filters.begin(); it != filters.end(); it++)
-  {
+  for (it = filters.begin(); it != filters.end(); it++) {
     int pos = *it;
     item = filter_items + pos;
     htp_audit_rule_2_str(item, temp_rule_buffer, sizeof(temp_rule_buffer));
@@ -1637,27 +1573,30 @@ static int htp_audit_add_rule_validate(
 
   htp_audit_lock_filter_and_var();
 
-  switch (0)
-  {
+  switch (0) {
     case 0:
-      if (filters.size() >= MAX_FILTER_ITEMS)
+      if (filters.size() >= MAX_FILTER_ITEMS) {
+        success = false;
+        break;
+      }
+      filter_item_t item;
+      htp_audit_init_filter_item(&item);
+
+      if (htp_audit_parse_filter(dup_str, &item) == -1)
       {
         success = false;
         break;
       }
 
-      filter_item_t item;
-      htp_audit_init_filter_item(&item);
-
-      htp_audit_parse_filter(dup_str, &item);
       if (htp_audit_find_filter_by_name(item.name) != -1)
         success = false;
 
-      *static_cast<const char **>(save) = input;
-      free(dup_str);
   }
 
   htp_audit_unlock_filter_and_var();
+
+  *static_cast<const char **>(save) = input;
+  free(dup_str);
   if (success)
     return (0);
 
@@ -1688,8 +1627,7 @@ static void htp_audit_add_rule_update(
   htp_audit_lock_filter_and_var();
 
   {
-    if (add_rule != NULL)
-    {
+    if (add_rule != NULL) {
       free(add_rule);
     }
 
@@ -1776,8 +1714,7 @@ static void htp_audit_remove_rule_update(
   htp_audit_lock_filter_and_var();
 
   {
-    if (remove_rule != NULL)
-    {
+    if (remove_rule != NULL) {
       free(remove_rule);
     }
     remove_rule = dup_str;
@@ -1812,13 +1749,11 @@ static void htp_audit_set_enable_buffer_update(
   if (nvalue == enable_buffer)
     DBUG_VOID_RETURN;
 
-  if (nvalue == FALSE)
-  {
+  if (nvalue == FALSE) {
     Logger::GetLogger()->EnableBuffer(false);
     Logger::GetELogger()->EnableBuffer(false);
   }
-  else
-  {
+  else {
     Logger::GetLogger()->EnableBuffer(true);
     Logger::GetELogger()->EnableBuffer(true);
   }
@@ -1841,17 +1776,14 @@ static int htp_audit_flush_log_validate(
   long long tmp;
 
   value->val_int(value, &tmp);
-  if (tmp)
-  {
+  if (tmp) {
     int ret = Logger::FlushNew();
-    if (ret)
-    {
+    if (ret) {
       //    *static_cast<long long*>(save) = TRUE;
       //    *(my_bool*) save = TRUE;
       DBUG_RETURN(ret);
     }
-    else
-    {
+    else {
       //*static_cast<long long*>(save) = FALSE;
       //    *(my_bool*) save = FALSE;
       DBUG_RETURN(0);

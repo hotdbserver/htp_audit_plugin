@@ -15,6 +15,7 @@
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 */
 
+//#include "htp_audit.h"
 #include <string.h>
 #include<stdlib.h>
 #include "htp_audit_vars.h"
@@ -58,8 +59,7 @@ void LogBuffer::Write(const char *msg, int msg_len)
 {
   if ((available_pos_ + msg_len) >= buffer_size_)
     Flush();
-  if (msg_len >= buffer_size_)
-  {
+  if (msg_len >= buffer_size_) {
     fprintf(file_, "%s", msg);
     fflush(file_);
     return;
@@ -90,8 +90,7 @@ int LogBuffer::SetBufferSize(int size)
   if (byte_size < LOG_BUFFER_SIZE)
     return 0;
 
-  if (byte_size == LOG_BUFFER_SIZE)
-  {
+  if (byte_size == LOG_BUFFER_SIZE) {
     Flush();
 
     if (buffer_ != buffer_inner_)
@@ -191,8 +190,7 @@ Logger::Logger(const char *path)
 
 Logger::~Logger()
 {
-  if (log_buffer_ != NULL)
-  {
+  if (log_buffer_ != NULL) {
     log_buffer_->Flush();
     delete log_buffer_;
   }
@@ -212,26 +210,21 @@ void Logger::Write(const char *info, const char *splitter)
     return;
 
   Lock();
-  if (enable_buffer_)
-  {
+  if (enable_buffer_) {
     int info_len = strlen(info);
     log_buffer_->Write(info, info_len);
 
-    if (splitter != NULL)
-    {
+    if (splitter != NULL) {
       int splitter_len = strlen(splitter);
       log_buffer_->Write(splitter, splitter_len);
     }
 
   }
-  else
-  {
-    if (splitter != NULL)
-    {
+  else {
+    if (splitter != NULL) {
       fprintf(file_, "%s%s", info, splitter);
     }
-    else
-    {
+    else {
       fprintf(file_, "%s", info);
     }
 
@@ -246,14 +239,12 @@ void Logger::EnableBuffer(bool enable)
     return;
 
   Lock();
-  if (enable == true)
-  {
+  if (enable == true) {
     //打开开关
     if (log_buffer_ == NULL)
       log_buffer_ = new LogBuffer(file_);
   }
-  else
-  {
+  else {
     //flush 全部内容
     log_buffer_->Flush();
   }
@@ -267,8 +258,7 @@ int Logger::FlushNewInner()
   Lock();
   char file_name_new[512];
 
-  if (enable_buffer_ == true)
-  {
+  if (enable_buffer_ == true) {
     log_buffer_->Flush();
     delete log_buffer_;
   }
@@ -292,8 +282,7 @@ int Logger::FlushNewInner()
 int Logger::SetBufferSizeInner(int size)
 {
   Lock();
-  if (enable_buffer_ == true)
-  {
+  if (enable_buffer_ == true) {
     log_buffer_->SetBufferSize(size);
   }
   Unlock();

@@ -15,8 +15,14 @@
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 */
 
+//
+// Created by gqhao on 9/30/18.
+//
+
 #ifndef MYSQL_HTP_AUDIT_VARS_H
 #define MYSQL_HTP_AUDIT_VARS_H
+//#include"htp_audit_filter.h"
+//#include"htp_audit.h"
 
 #define MAX_ADD_RULE_LENGTH 1024
 #define DEFAULT_LOG_FILE "htp_audit.log"

@@ -13,14 +13,13 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-*/
-
-#include <stdio.h>
+*/#include <stdio.h>
 #include <string.h>
 #include <my_global.h>
 #include <mysql/plugin.h>
 #include <mysql/plugin_audit.h>
 #include <sql_plugin.h>
+//#include "htp_audit.h"
 #include <list>
 #include <ctype.h>
 #include <string>
@@ -194,10 +193,10 @@ void htp_audit_deinit_lock();
 #define HTP_AUDIT_EVENT_QUERY_SUB_NESTED_STATUS_END "nested end"
 
 // startup events
-#define HTP_AUDIT_EVENT_STARTUP_CLASS "startup"
+#define HTP_AUDIT_EVENT_STARTUP_CLASS "server startup"
 
 //shutdown events
-#define HTP_AUDIT_EVENT_SHUTDOWN_CLASS "shutdown"
+#define HTP_AUDIT_EVENT_SHUTDOWN_CLASS "server shutdown"
 
 //stored program events
 #define HTP_AUDIT_EVENT_STORED_PROGRAM_CLASS "stored program"
