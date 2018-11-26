@@ -20,7 +20,7 @@ looking for help for MS word
 ## Authors
 
 jiangyuxiang@hotpu.cn
-haoguoqing@hotpu.com
+haoguoqing@hotpu.cn
 
 ## License
 
