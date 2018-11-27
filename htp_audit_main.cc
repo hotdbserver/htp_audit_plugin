@@ -121,7 +121,7 @@ static int htp_audit_rules_from_config(config_group_t *group)
     {
       if (filter_item.event_setted == true)
       {
-        htp_audit_logf(HTP_AUDIT_LOG_LEVEL_ERROR, 
+        htp_audit_logf(HTP_AUDIT_LOG_LEVEL_ERROR,
                        "duplicate event setting in group %d",
                        group->number);
         return -1;
@@ -156,14 +156,13 @@ static int htp_audit_rules_from_config(config_group_t *group)
                        "too long value for command setting");
         return -1;
       }
-      strncpy(filter_item.command, config_item->value, config_item->value_len);
-      if (strcasecmp(filter_item.command,"query") !=0 && strcasecmp(filter_item.command,"execute") !=0)
+      if ((strncasecmp(config_item->value, "query", config_item->value_len) != 0)
+          && (strncasecmp(config_item->value, "execute", config_item->value_len) != 0))
       {
-        htp_audit_logf(HTP_AUDIT_LOG_LEVEL_ERROR,
-                       "command can only be setted to query or execute",
-                       group->number);
+        htp_audit_logf(HTP_AUDIT_LOG_LEVEL_ERROR, "command can only be setted to query or execute", group->number);
         return -1;
       }
+      strncpy(filter_item.command, config_item->value, config_item->value_len);
       filter_item.command[config_item->value_len] = 0;
       filter_item.command_length = config_item->value_len;
       filter_item.command_setted = true;
@@ -212,7 +211,8 @@ static int htp_audit_rules_from_config(config_group_t *group)
       filter_item.sql_keyword_length = config_item->value_len;
       filter_item.sql_keyword_setted = true;
     }
-    else {
+    else
+    {
       //不可识别的内容
       string err_msg = "unknow settings : ";
       err_msg += config_item->key;
@@ -282,10 +282,10 @@ static int htp_audit_init_env_from_config(config_t *config)
   htp_audit_log_file[0] = 0;
   htp_audit_error_log_file[0] = 0;
 
-  if (config->group_amount ==0)
+  if (config->group_amount == 0)
   {
-    strcpy(htp_audit_log_file,"htp_audit.log");
-    strcpy(htp_audit_error_log_file,"htp_audit_error.log");
+    strcpy(htp_audit_log_file, "htp_audit.log");
+    strcpy(htp_audit_error_log_file, "htp_audit_error.log");
     enable_buffer = 1;
     return (0);
   }
@@ -307,7 +307,8 @@ static int htp_audit_init_env_from_config(config_t *config)
       if (htp_audit_general_from_config(group))
         return -1;
     }
-    else {
+    else
+    {
       htp_audit_logf(HTP_AUDIT_LOG_LEVEL_ERROR,
                      "unknown group name : %s", group->name);
       return -1;
@@ -330,8 +331,8 @@ static int htp_audit_read_config_and_init_env()
   config = config_read(config_file);
   if (config == NULL)
   {
-    strcpy(htp_audit_log_file,"htp_audit.log");
-    strcpy(htp_audit_error_log_file,"htp_audit_error.log");
+    strcpy(htp_audit_log_file, "htp_audit.log");
+    strcpy(htp_audit_error_log_file, "htp_audit_error.log");
     enable_buffer = 1;
     return (0);
   }
@@ -487,41 +488,40 @@ static int htp_audit_notify(MYSQL_THD thd,
 */
 
 static struct st_mysql_audit htp_audit_descriptor =
-{
-  MYSQL_AUDIT_INTERFACE_VERSION,                    /* interface version    */
-  NULL,                                             /* release_thd function */
-  htp_audit_notify,                                /* notify function      */
-  {(unsigned long) MYSQL_AUDIT_GENERAL_ALL,
-   (unsigned long) MYSQL_AUDIT_CONNECTION_ALL,
-   (unsigned long) MYSQL_AUDIT_PARSE_ALL,
-   0, /* This event class is currently not supported. */
-   (unsigned long) MYSQL_AUDIT_TABLE_ACCESS_ALL,
-   (unsigned long) MYSQL_AUDIT_GLOBAL_VARIABLE_ALL,
-   (unsigned long) MYSQL_AUDIT_SERVER_STARTUP_ALL,
-   (unsigned long) MYSQL_AUDIT_SERVER_SHUTDOWN_ALL,
-   (unsigned long) MYSQL_AUDIT_COMMAND_ALL,
-   (unsigned long) MYSQL_AUDIT_QUERY_ALL,
-   (unsigned long) MYSQL_AUDIT_STORED_PROGRAM_ALL}
-};
+    {
+        MYSQL_AUDIT_INTERFACE_VERSION,                    /* interface version    */
+        NULL,                                             /* release_thd function */
+        htp_audit_notify,                                /* notify function      */
+        {(unsigned long) MYSQL_AUDIT_GENERAL_ALL,
+         (unsigned long) MYSQL_AUDIT_CONNECTION_ALL,
+         (unsigned long) MYSQL_AUDIT_PARSE_ALL,
+         0, /* This event class is currently not supported. */
+         (unsigned long) MYSQL_AUDIT_TABLE_ACCESS_ALL,
+         (unsigned long) MYSQL_AUDIT_GLOBAL_VARIABLE_ALL,
+         (unsigned long) MYSQL_AUDIT_SERVER_STARTUP_ALL,
+         (unsigned long) MYSQL_AUDIT_SERVER_SHUTDOWN_ALL,
+         (unsigned long) MYSQL_AUDIT_COMMAND_ALL,
+         (unsigned long) MYSQL_AUDIT_QUERY_ALL,
+         (unsigned long) MYSQL_AUDIT_STORED_PROGRAM_ALL}
+    };
 
 /*
   Plugin library descriptor
 */
 
 mysql_declare_plugin(htp_audit)
-{
-  MYSQL_AUDIT_PLUGIN,           /* type                               */
-  &htp_audit_descriptor,        /* descriptor                         */
-  "HTP_AUDIT",                  /* name, install plugin's plugin_name */
-  "HotPU Corp Jiangyx & Haogq", /* author                             */
-  "Htp audit plugin",           /* description                        */
-  PLUGIN_LICENSE_GPL,
-  htp_audit_plugin_init,        /* init function (when loaded)     */
-  htp_audit_plugin_deinit,      /* deinit function (when unloaded) */
-  0x0001,                       /* version                         */
-  htp_audit_status,             /* status variables                */
-  htp_audit_sys_var,            /* system variables                */
-  NULL,
-  0,
-  }
-mysql_declare_plugin_end;
+        {
+            MYSQL_AUDIT_PLUGIN,           /* type                               */
+            &htp_audit_descriptor,        /* descriptor                         */
+            "HTP_AUDIT",                  /* name, install plugin's plugin_name */
+            "HotPU Corp Jiangyx & Haogq", /* author                             */
+            "Htp audit plugin",           /* description                        */
+            PLUGIN_LICENSE_GPL,
+            htp_audit_plugin_init,        /* init function (when loaded)     */
+            htp_audit_plugin_deinit,      /* deinit function (when unloaded) */
+            0x0001,                       /* version                         */
+            htp_audit_status,             /* status variables                */
+            htp_audit_sys_var,            /* system variables                */
+            NULL,
+            0,
+        }mysql_declare_plugin_end;
