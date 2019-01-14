@@ -375,6 +375,7 @@ static int htp_audit_get_event_init(
       return -1;
     }
   }
+  /*
   else if (strcasecmp(main_class, HTP_AUDIT_EVENT_PARSE_CLASS) == 0)
   {
     *main_class_int = MYSQL_AUDIT_PARSE_CLASS;
@@ -571,6 +572,7 @@ static int htp_audit_get_event_init(
     *sub_class_int = EVENT_ALL;
     return 0;
   }
+  */
   else
   {
     return -1;
@@ -614,6 +616,7 @@ static void htp_audit_fill_event(
 
     item->connection_events[sub_class] = EVENT_SETTED;
   }
+/*
   else if (main_class == MYSQL_AUDIT_PARSE_CLASS)
   {
     DBUG_ASSERT(main_class == MYSQL_AUDIT_PARSE_CLASS);
@@ -716,6 +719,7 @@ static void htp_audit_fill_event(
     item->audit_event_stored_program = true;
     return;
   }
+  */
   else
   {
     return;
@@ -1243,7 +1247,7 @@ htp_audit_filter_event(event_info_t *info, filter_item_t *item, unsigned int eve
     {
       return NOT_AUDIT_EVENT;
     }
-    else if (info->main_class == MYSQL_AUDIT_PARSE_CLASS &&
+    /*else if (info->main_class == MYSQL_AUDIT_PARSE_CLASS &&
         item->parse_events[get_sub_class_index(info->sub_class)] != EVENT_SETTED)
     {
       return NOT_AUDIT_EVENT;
@@ -1287,7 +1291,7 @@ htp_audit_filter_event(event_info_t *info, filter_item_t *item, unsigned int eve
         item->audit_event_stored_program != EVENT_SETTED)
     {
       return NOT_AUDIT_EVENT;
-    }
+    }*/
   }
 
   if (info->main_class == MYSQL_AUDIT_GENERAL_CLASS)

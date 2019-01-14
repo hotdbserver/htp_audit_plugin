@@ -70,14 +70,14 @@ void audit_connection_connect(const struct mysql_event_connection *event)
   cJSON_AddItemToObject(root, "timestamp", cJSON_CreateString(current_str));
   cJSON_AddItemToObject(root, "type", cJSON_CreateString("connection"));
   cJSON_AddItemToObject(root, "sub type", cJSON_CreateString("connect"));
-  if (event->host.str != NULL)
-    cJSON_AddItemToObject(root, "host", cJSON_CreateString(event->host.str));
-  if (event->ip.str != NULL)
-    cJSON_AddItemToObject(root, "ip", cJSON_CreateString(event->ip.str));
-  if (event->user.str != NULL)
-    cJSON_AddItemToObject(root, "user", cJSON_CreateString(event->user.str));
-  cJSON_AddItemToObject(root, "connection type",
-                        cJSON_CreateNumber(event->connection_type));
+  if (event->host != NULL)
+    cJSON_AddItemToObject(root, "host", cJSON_CreateString(event->host));
+  if (event->ip != NULL)
+    cJSON_AddItemToObject(root, "ip", cJSON_CreateString(event->ip));
+  if (event->user != NULL)
+    cJSON_AddItemToObject(root, "user", cJSON_CreateString(event->user));
+/*  cJSON_AddItemToObject(root, "connection type",
+                        cJSON_CreateNumber(event->connection_type));*/
   //获得json字符串，输出到审计日志
   char *json_str = cJSON_Print(root);
   Logger::GetLogger()->Write(json_str, ",");
@@ -105,14 +105,14 @@ void audit_connection_disconnect(const struct mysql_event_connection *event)
   cJSON_AddItemToObject(root, "timestamp", cJSON_CreateString(current_str));
   cJSON_AddItemToObject(root, "type", cJSON_CreateString("connection"));
   cJSON_AddItemToObject(root, "sub type", cJSON_CreateString("disconnect"));
-  if (event->host.str != NULL)
-    cJSON_AddItemToObject(root, "host", cJSON_CreateString(event->host.str));
-  if (event->ip.str != NULL)
-    cJSON_AddItemToObject(root, "ip", cJSON_CreateString(event->ip.str));
-  if (event->user.str != NULL)
-    cJSON_AddItemToObject(root, "user", cJSON_CreateString(event->user.str));
-  cJSON_AddItemToObject(root, "connection type",
-                        cJSON_CreateNumber(event->connection_type));
+  if (event->host != NULL)
+    cJSON_AddItemToObject(root, "host", cJSON_CreateString(event->host));
+  if (event->ip != NULL)
+    cJSON_AddItemToObject(root, "ip", cJSON_CreateString(event->ip));
+  if (event->user != NULL)
+    cJSON_AddItemToObject(root, "user", cJSON_CreateString(event->user));
+/*  cJSON_AddItemToObject(root, "connection type",
+                        cJSON_CreateNumber(event->connection_type));*/
   //获得json字符串，输出到审计日志
   char *json_str = cJSON_Print(root);
   Logger::GetLogger()->Write(json_str, ",");
@@ -140,14 +140,14 @@ void audit_connection_change_user(const struct mysql_event_connection *event)
   cJSON_AddItemToObject(root, "timestamp", cJSON_CreateString(current_str));
   cJSON_AddItemToObject(root, "type", cJSON_CreateString("connection"));
   cJSON_AddItemToObject(root, "sub type", cJSON_CreateString("change user"));
-  if (event->host.str != NULL)
-    cJSON_AddItemToObject(root, "host", cJSON_CreateString(event->host.str));
-  if (event->ip.str != NULL)
-    cJSON_AddItemToObject(root, "ip", cJSON_CreateString(event->ip.str));
-  if (event->user.str != NULL)
-    cJSON_AddItemToObject(root, "user", cJSON_CreateString(event->user.str));
-  cJSON_AddItemToObject(root, "connection type",
-                        cJSON_CreateNumber(event->connection_type));
+  if (event->host != NULL)
+    cJSON_AddItemToObject(root, "host", cJSON_CreateString(event->host));
+  if (event->ip != NULL)
+    cJSON_AddItemToObject(root, "ip", cJSON_CreateString(event->ip));
+  if (event->user != NULL)
+    cJSON_AddItemToObject(root, "user", cJSON_CreateString(event->user));
+/*  cJSON_AddItemToObject(root, "connection type",
+                        cJSON_CreateNumber(event->connection_type));*/
 
   //获得json字符串，输出到审计日志
   char *json_str = cJSON_Print(root);
@@ -157,6 +157,7 @@ void audit_connection_change_user(const struct mysql_event_connection *event)
   cJSON_Delete(root);
   free(json_str);
 }
+/*
 
 void audit_connection_pre_authenticate(const struct mysql_event_connection *event)
 {
@@ -193,6 +194,7 @@ void audit_connection_pre_authenticate(const struct mysql_event_connection *even
   cJSON_Delete(root);
   free(json_str);
 }
+*/
 
 
 /*
@@ -219,9 +221,9 @@ void audit_general_log(const struct mysql_event_general *event)
   cJSON_AddItemToObject(root, "timestamp", cJSON_CreateString(current_str));
   cJSON_AddItemToObject(root, "type", cJSON_CreateString("general"));
   cJSON_AddItemToObject(root, "sub type", cJSON_CreateString("log"));
-  if (event->general_user.str != NULL)
+  if (event->general_user != NULL)
     cJSON_AddItemToObject(root, "user",
-                          cJSON_CreateString(event->general_user.str));
+                          cJSON_CreateString(event->general_user));
   if (event->general_host.str != NULL)
     cJSON_AddItemToObject(root, "host",
                           cJSON_CreateString(event->general_host.str));
@@ -231,9 +233,9 @@ void audit_general_log(const struct mysql_event_general *event)
   if (event->general_sql_command.str != NULL)
     cJSON_AddItemToObject(root, "command_class",
                           cJSON_CreateString(event->general_sql_command.str));
-  if (event->general_query.length > 0)
+  if (event->general_query_length > 0)
     cJSON_AddItemToObject(root, "sqltext",
-                          cJSON_CreateString(event->general_query.str));
+                          cJSON_CreateString(event->general_query));
   cJSON_AddItemToObject(root, "code",
                         cJSON_CreateNumber(event->general_error_code));
 
@@ -265,9 +267,9 @@ void audit_general_error(const struct mysql_event_general *event)
   cJSON_AddItemToObject(root, "timestamp", cJSON_CreateString(current_str));
   cJSON_AddItemToObject(root, "type", cJSON_CreateString("general"));
   cJSON_AddItemToObject(root, "sub type", cJSON_CreateString("error"));
-  if (event->general_user.str != NULL)
+  if (event->general_user != NULL)
     cJSON_AddItemToObject(root, "user",
-                          cJSON_CreateString(event->general_user.str));
+                          cJSON_CreateString(event->general_user));
   if (event->general_host.str != NULL)
     cJSON_AddItemToObject(root, "host",
                           cJSON_CreateString(event->general_host.str));
@@ -277,14 +279,14 @@ void audit_general_error(const struct mysql_event_general *event)
   if (event->general_sql_command.str != NULL)
     cJSON_AddItemToObject(root, "command_class",
                           cJSON_CreateString(event->general_sql_command.str));
-  if (event->general_query.length > 0)
+  if (event->general_query_length > 0)
     cJSON_AddItemToObject(root, "sqltext",
-                          cJSON_CreateString(event->general_query.str));
+                          cJSON_CreateString(event->general_query));
   cJSON_AddItemToObject(root, "code",
                         cJSON_CreateNumber(event->general_error_code));
-  if (event->general_command.str != NULL)
+  if (event->general_command != NULL)
     cJSON_AddItemToObject(root, "error msg",
-                          cJSON_CreateString(event->general_command.str));
+                          cJSON_CreateString(event->general_command));
 
 
   //获得json字符串，输出到审计日志
@@ -314,9 +316,9 @@ void audit_general_status(const struct mysql_event_general *event)
   cJSON_AddItemToObject(root, "timestamp", cJSON_CreateString(current_str));
   cJSON_AddItemToObject(root, "type", cJSON_CreateString("general"));
   cJSON_AddItemToObject(root, "sub type", cJSON_CreateString("status"));
-  if (event->general_user.str != NULL)
+  if (event->general_user != NULL)
     cJSON_AddItemToObject(root, "user",
-                          cJSON_CreateString(event->general_user.str));
+                          cJSON_CreateString(event->general_user));
   if (event->general_host.str != NULL)
     cJSON_AddItemToObject(root, "host",
                           cJSON_CreateString(event->general_host.str));
@@ -326,9 +328,9 @@ void audit_general_status(const struct mysql_event_general *event)
   if (event->general_sql_command.str != NULL)
     cJSON_AddItemToObject(root, "command_class",
                           cJSON_CreateString(event->general_sql_command.str));
-  if (event->general_query.length > 0)
+  if (event->general_query_length > 0)
     cJSON_AddItemToObject(root, "sqltext",
-                          cJSON_CreateString(event->general_query.str));
+                          cJSON_CreateString(event->general_query));
   cJSON_AddItemToObject(root, "code",
                         cJSON_CreateNumber(event->general_error_code));
 
@@ -359,9 +361,9 @@ void audit_general_result(const struct mysql_event_general *event)
   cJSON_AddItemToObject(root, "timestamp", cJSON_CreateString(current_str));
   cJSON_AddItemToObject(root, "type", cJSON_CreateString("general"));
   cJSON_AddItemToObject(root, "sub type", cJSON_CreateString("result"));
-  if (event->general_user.str != NULL)
+  if (event->general_user != NULL)
     cJSON_AddItemToObject(root, "user",
-                          cJSON_CreateString(event->general_user.str));
+                          cJSON_CreateString(event->general_user));
   if (event->general_host.str != NULL)
     cJSON_AddItemToObject(root, "host",
                           cJSON_CreateString(event->general_host.str));
@@ -371,9 +373,9 @@ void audit_general_result(const struct mysql_event_general *event)
   if (event->general_sql_command.str != NULL)
     cJSON_AddItemToObject(root, "command_class",
                           cJSON_CreateString(event->general_sql_command.str));
-  if (event->general_query.length > 0)
+  if (event->general_query_length > 0)
     cJSON_AddItemToObject(root, "sqltext",
-                          cJSON_CreateString(event->general_query.str));
+                          cJSON_CreateString(event->general_query));
   cJSON_AddItemToObject(root, "code",
                         cJSON_CreateNumber(event->general_error_code));
 
@@ -386,6 +388,7 @@ void audit_general_result(const struct mysql_event_general *event)
   free(json_str);
 }
 
+/*
 
 //new audit feature,added by gqhao 2018-10-08
 
@@ -717,6 +720,7 @@ void audit_server_shutdown_shutdown(const struct mysql_event_server_shutdown *ev
   free(json_str);
 }
 //case mysql server startup error,becase of mysql's bug,startup argvs error
+*/
 /*
 void audit_server_startup_startup(const struct mysql_event_server_startup *event) {
   DBUG_ASSERT(event->event_subclass == MYSQL_AUDIT_SERVER_STARTUP_STARTUP);
@@ -744,7 +748,8 @@ void audit_server_startup_startup(const struct mysql_event_server_startup *event
   cJSON_Delete(root);
   free(json_str);
 }
-*/
+*//*
+
 //MYSQL_AUDIT_COMMAND_ALL
 
 void audit_command_start(const struct mysql_event_command *event)
@@ -1180,3 +1185,4 @@ void audit_stored_program_event(const struct mysql_event_stored_program *event)
   cJSON_Delete(root);
   free(json_str);
 }
+*/

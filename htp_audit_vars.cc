@@ -639,49 +639,49 @@ HTP_AUDIT_VAR(general_status)
 HTP_AUDIT_VAR(connection_connect)
 HTP_AUDIT_VAR(connection_disconnect)
 HTP_AUDIT_VAR(connection_change_user)
-HTP_AUDIT_VAR(connection_pre_authenticate)
+//HTP_AUDIT_VAR(connection_pre_authenticate)
 //HTP_AUDIT_VAR(connection_pre_authenticate)
 
 /* Count MYSQL_AUDIT_PARSE_CLASS event instances */
-HTP_AUDIT_VAR(parse_preparse)
-HTP_AUDIT_VAR(parse_postparse)
+//HTP_AUDIT_VAR(parse_preparse)
+//HTP_AUDIT_VAR(parse_postparse)
 
 /* Count MYSQL_AUDIT_COMMAND_CLASS event instances */
-HTP_AUDIT_VAR(command_start)
-HTP_AUDIT_VAR(command_end)
+//HTP_AUDIT_VAR(command_start)
+//HTP_AUDIT_VAR(command_end)
 
 /* Count MYSQL_AUDIT_AUTHORIZATION_CLASS event instances */
-HTP_AUDIT_VAR(authorization_user)
-HTP_AUDIT_VAR(authorization_db)
-HTP_AUDIT_VAR(authorization_table)
+//HTP_AUDIT_VAR(authorization_user)
+//HTP_AUDIT_VAR(authorization_db)
+//HTP_AUDIT_VAR(authorization_table)
 
 /* Count MYSQL_AUDIT_QUERY_CLASS event instances */
-HTP_AUDIT_VAR(query_start)
-HTP_AUDIT_VAR(query_nested_start)
-HTP_AUDIT_VAR(query_status_end)
-HTP_AUDIT_VAR(query_nested_status_end)
+//HTP_AUDIT_VAR(query_start)
+//HTP_AUDIT_VAR(query_nested_start)
+//HTP_AUDIT_VAR(query_status_end)
+//HTP_AUDIT_VAR(query_nested_status_end)
 
 /* Count MYSQL_AUDIT_SERVER_STARTUP_CLASS event instances */
-HTP_AUDIT_VAR(server_startup)
-
-HTP_AUDIT_VAR(authorization_column)
-HTP_AUDIT_VAR(authorization_procedure)
-HTP_AUDIT_VAR(authorization_proxy)
+//HTP_AUDIT_VAR(server_startup)
+//
+//HTP_AUDIT_VAR(authorization_column)
+//HTP_AUDIT_VAR(authorization_procedure)
+//HTP_AUDIT_VAR(authorization_proxy)
 /* Count MYSQL_AUDIT_SERVER_SHUTDOWN_CLASS event instances */
-HTP_AUDIT_VAR(server_shutdown)
+//HTP_AUDIT_VAR(server_shutdown)
 
 /* Count MYSQL_AUDIT_TABLE_ACCESS_CLASS event instances */
-HTP_AUDIT_VAR(table_access_insert)
-HTP_AUDIT_VAR(table_access_delete)
-HTP_AUDIT_VAR(table_access_update)
-HTP_AUDIT_VAR(table_access_read)
+//HTP_AUDIT_VAR(table_access_insert)
+//HTP_AUDIT_VAR(table_access_delete)
+//HTP_AUDIT_VAR(table_access_update)
+//HTP_AUDIT_VAR(table_access_read)
 
 /* Count MYSQL_AUDIT_GLOBAL_VARIABLE_CLASS event instances */
-HTP_AUDIT_VAR(global_variable_get)
-HTP_AUDIT_VAR(global_variable_set)
+//HTP_AUDIT_VAR(global_variable_get)
+//HTP_AUDIT_VAR(global_variable_set)
 
 /* Count MYSQL_AUDIT_STORED_PROGRAM event instances */
-HTP_AUDIT_VAR(stored_program)
+//HTP_AUDIT_VAR(stored_program)
 
 
 
@@ -741,7 +741,7 @@ void number_of_calls_connection_change_user_incr()
 {
   number_of_calls_connection_change_user++;
 }
-
+/*
 void number_of_calls_connection_pre_authenticate_incr()
 {
   number_of_calls_connection_pre_authenticate++;
@@ -863,6 +863,7 @@ void number_of_calls_stored_program_incr()
   number_of_calls_stored_program++;
 }
 
+ */
 /*被审计的事件统计*/
 static volatile int64_t number_of_records; /* for SHOW STATUS, see below */
 #define HTP_AUDIT_VAR_RECORD(x) static volatile int64_t number_of_records_ ## x;
@@ -887,49 +888,49 @@ HTP_AUDIT_VAR_RECORD(general_status)
 HTP_AUDIT_VAR_RECORD(connection_connect)
 HTP_AUDIT_VAR_RECORD(connection_disconnect)
 HTP_AUDIT_VAR_RECORD(connection_change_user)
-HTP_AUDIT_VAR_RECORD(connection_pre_authenticate)
+//HTP_AUDIT_VAR_RECORD(connection_pre_authenticate)
 //HTP_AUDIT_VAR_RECORD(connection_pre_authenticate)
 
 /* Count MYSQL_AUDIT_PARSE_CLASS event instances */
-HTP_AUDIT_VAR_RECORD(parse_preparse)
-HTP_AUDIT_VAR_RECORD(parse_postparse)
+//HTP_AUDIT_VAR_RECORD(parse_preparse)
+//HTP_AUDIT_VAR_RECORD(parse_postparse)
 
 /* Count MYSQL_AUDIT_COMMAND_CLASS event instances */
-HTP_AUDIT_VAR_RECORD(command_start)
-HTP_AUDIT_VAR_RECORD(command_end)
+//HTP_AUDIT_VAR_RECORD(command_start)
+//HTP_AUDIT_VAR_RECORD(command_end)
 
 /* Count MYSQL_AUDIT_AUTHORIZATION_CLASS event instances */
-HTP_AUDIT_VAR_RECORD(authorization_user)
-HTP_AUDIT_VAR_RECORD(authorization_db)
-HTP_AUDIT_VAR_RECORD(authorization_table)
-HTP_AUDIT_VAR_RECORD(authorization_column)
-HTP_AUDIT_VAR_RECORD(authorization_procedure)
-HTP_AUDIT_VAR_RECORD(authorization_proxy)
+//HTP_AUDIT_VAR_RECORD(authorization_user)
+//HTP_AUDIT_VAR_RECORD(authorization_db)
+//HTP_AUDIT_VAR_RECORD(authorization_table)
+//HTP_AUDIT_VAR_RECORD(authorization_column)
+//HTP_AUDIT_VAR_RECORD(authorization_procedure)
+//HTP_AUDIT_VAR_RECORD(authorization_proxy)
 
 /* Count MYSQL_AUDIT_QUERY_CLASS event instances */
-HTP_AUDIT_VAR_RECORD(query_start)
-HTP_AUDIT_VAR_RECORD(query_nested_start)
-HTP_AUDIT_VAR_RECORD(query_status_end)
-HTP_AUDIT_VAR_RECORD(query_nested_status_end)
+//HTP_AUDIT_VAR_RECORD(query_start)
+//HTP_AUDIT_VAR_RECORD(query_nested_start)
+//HTP_AUDIT_VAR_RECORD(query_status_end)
+//HTP_AUDIT_VAR_RECORD(query_nested_status_end)
 
 /* Count MYSQL_AUDIT_SERVER_STARTUP_CLASS event instances */
-HTP_AUDIT_VAR_RECORD(server_startup)
+//HTP_AUDIT_VAR_RECORD(server_startup)
 
 /* Count MYSQL_AUDIT_SERVER_SHUTDOWN_CLASS event instances */
-HTP_AUDIT_VAR_RECORD(server_shutdown)
+//HTP_AUDIT_VAR_RECORD(server_shutdown)
 
 /* Count MYSQL_AUDIT_TABLE_ACCESS_CLASS event instances */
-HTP_AUDIT_VAR_RECORD(table_access_insert)
-HTP_AUDIT_VAR_RECORD(table_access_delete)
-HTP_AUDIT_VAR_RECORD(table_access_update)
-HTP_AUDIT_VAR_RECORD(table_access_read)
+//HTP_AUDIT_VAR_RECORD(table_access_insert)
+//HTP_AUDIT_VAR_RECORD(table_access_delete)
+//HTP_AUDIT_VAR_RECORD(table_access_update)
+//HTP_AUDIT_VAR_RECORD(table_access_read)
 
 /* Count MYSQL_AUDIT_GLOBAL_VARIABLE_CLASS event instances */
-HTP_AUDIT_VAR_RECORD(global_variable_get)
-HTP_AUDIT_VAR_RECORD(global_variable_set)
+//HTP_AUDIT_VAR_RECORD(global_variable_get)
+//HTP_AUDIT_VAR_RECORD(global_variable_set)
 
 /* Count MYSQL_AUDIT_STORED_PROGRAM_CLASS event instances */
-HTP_AUDIT_VAR_RECORD(stored_program)
+//HTP_AUDIT_VAR_RECORD(stored_program)
 
 void number_of_records_incr()
 {
@@ -970,7 +971,7 @@ void number_of_records_connection_change_user_incr()
 {
   number_of_records_connection_change_user++;
 }
-
+/*
 void number_of_records_connection_pre_authenticate_incr()
 {
   number_of_records_connection_pre_authenticate++;
@@ -1090,10 +1091,12 @@ void number_of_records_stored_program_incr()
 {
   number_of_records_stored_program++;
 }
+ */
 
 /*
   Plugin status variables for SHOW STATUS
 */
+/*
 struct st_mysql_show_var htp_audit_status[] =
     {
         {"Htp_audit_called",
@@ -1278,7 +1281,43 @@ struct st_mysql_show_var htp_audit_status[] =
          SHOW_LONGLONG, SHOW_SCOPE_GLOBAL},
         {0, 0, SHOW_UNDEF, SHOW_SCOPE_GLOBAL}
     };
+*/
 
+
+/*
+  Plugin status variables for SHOW STATUS
+  version mysql 5.6.x
+*/
+struct st_mysql_show_var htp_audit_status[] =
+    {
+        {"Htp_audit_called",
+          (char *) &number_of_calls,
+          SHOW_LONGLONG},
+        {"Htp_audit_general_log_called",
+          (char *) &number_of_calls_general_log,
+          SHOW_LONGLONG},
+        {"Htp_audit_general_error_called",
+         (char *) &number_of_calls_general_error,
+         SHOW_LONGLONG},
+        {"Htp_audit_general_result_called",
+         (char *) &number_of_calls_general_result,
+         SHOW_LONGLONG},
+        {"Htp_audit_general_status_called",
+         (char *) &number_of_calls_general_status,
+         SHOW_LONGLONG},
+        {"Htp_audit_connection_connect_called",
+         (char *) &number_of_calls_connection_connect,
+         SHOW_LONGLONG},
+        {"Htp_audit_connection_disconnect_called",
+         (char *) &number_of_calls_connection_disconnect,
+         SHOW_LONGLONG},
+        {"Htp_audit_connection_change_user_called",
+         (char *) &number_of_calls_connection_change_user,
+         SHOW_LONGLONG},
+        {0, 0, SHOW_UNDEF}
+    };
+
+/*
 void htp_audit_init_status()
 {
   number_of_calls = 0;
@@ -1345,6 +1384,20 @@ void htp_audit_init_status()
   number_of_records_global_variable_set = 0;
   number_of_records_stored_program = 0;
 
+}
+*/
+
+/* for mysql 5.6 */
+void htp_audit_init_status()
+{
+  number_of_calls = 0;
+  number_of_calls_general_log = 0;
+  number_of_calls_general_error = 0;
+  number_of_calls_general_result = 0;
+  number_of_calls_general_status = 0;
+  number_of_calls_connection_connect = 0;
+  number_of_calls_connection_disconnect = 0;
+  number_of_calls_connection_change_user = 0;
 }
 
 void htp_audit_deinit_status()

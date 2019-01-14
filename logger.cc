@@ -120,7 +120,7 @@ int LogBuffer::SetBufferSize(int size)
 /*
   用于审计general类下的status子类和connection类事件的记录
  */
-static Logger *logger = NULL;
+static Logger *htp_logger = NULL;
 
 /*用于审计genaral类下error的事件记录*/
 static Logger *elogger = NULL;
@@ -128,8 +128,8 @@ static bool log_initialized = false;
 
 int Logger::Initialize(const char *log, const char *elog, my_bool enable_buffer)
 {
-  logger = new Logger(log);
-  logger->EnableBuffer(enable_buffer);
+  htp_logger = new Logger(log);
+  htp_logger->EnableBuffer(enable_buffer);
   elogger = new Logger(elog);
   elogger->EnableBuffer(enable_buffer);
 
@@ -142,7 +142,7 @@ int Logger::Deinitialize()
   if (!log_initialized)
     return 0;
 
-  delete logger;
+  delete htp_logger;
   delete elogger;
   log_initialized = false;
   return 0;
@@ -150,7 +150,7 @@ int Logger::Deinitialize()
 
 Logger *Logger::GetLogger()
 {
-  return logger;
+  return htp_logger;
 }
 
 Logger *Logger::GetELogger()
@@ -160,7 +160,7 @@ Logger *Logger::GetELogger()
 
 int Logger::FlushNew()
 {
-  logger->FlushNewInner();
+  htp_logger->FlushNewInner();
   elogger->FlushNewInner();
 
   return 0;
@@ -168,7 +168,7 @@ int Logger::FlushNew()
 
 int Logger::SetBufferSize(int size)
 {
-  logger->SetBufferSizeInner(size);
+  htp_logger->SetBufferSizeInner(size);
   elogger->SetBufferSizeInner(size);
 
   return 0;

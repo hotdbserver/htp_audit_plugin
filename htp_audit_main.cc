@@ -468,19 +468,19 @@ static int htp_audit_plugin_init(void *arg __attribute__((unused)))
 /*static void htp_audit_notify(MYSQL_THD thd __attribute__((unused)),
                               unsigned int event_class,
                               const void *event)*/
-static int htp_audit_notify(MYSQL_THD thd,
-                            mysql_event_class_t event_class,
+static void htp_audit_notify(MYSQL_THD thd,
+                            unsigned int event_class,
                             const void *event)
 {
-  if (quiting == true)
-    return 0;
+//  if (quiting == true)
+//    return 0;
 
   number_of_calls_incr();
 
   htp_audit_process_event(thd, event_class, event);
 
   //TO DO : error check
-  return 0;
+//  return 0;
 }
 
 /*
@@ -492,17 +492,19 @@ static struct st_mysql_audit htp_audit_descriptor =
         MYSQL_AUDIT_INTERFACE_VERSION,                    /* interface version    */
         NULL,                                             /* release_thd function */
         htp_audit_notify,                                /* notify function      */
-        {(unsigned long) MYSQL_AUDIT_GENERAL_ALL,
-         (unsigned long) MYSQL_AUDIT_CONNECTION_ALL,
-         (unsigned long) MYSQL_AUDIT_PARSE_ALL,
-         0, /* This event class is currently not supported. */
-         (unsigned long) MYSQL_AUDIT_TABLE_ACCESS_ALL,
-         (unsigned long) MYSQL_AUDIT_GLOBAL_VARIABLE_ALL,
-         (unsigned long) MYSQL_AUDIT_SERVER_STARTUP_ALL,
-         (unsigned long) MYSQL_AUDIT_SERVER_SHUTDOWN_ALL,
-         (unsigned long) MYSQL_AUDIT_COMMAND_ALL,
-         (unsigned long) MYSQL_AUDIT_QUERY_ALL,
-         (unsigned long) MYSQL_AUDIT_STORED_PROGRAM_ALL}
+//        {(unsigned long) MYSQL_AUDIT_GENERAL_ALL,
+//         (unsigned long) MYSQL_AUDIT_CONNECTION_ALL,
+//         (unsigned long) MYSQL_AUDIT_PARSE_ALL,
+//         0, /* This event class is currently not supported. */
+//         (unsigned long) MYSQL_AUDIT_TABLE_ACCESS_ALL,
+//         (unsigned long) MYSQL_AUDIT_GLOBAL_VARIABLE_ALL,
+//         (unsigned long) MYSQL_AUDIT_SERVER_STARTUP_ALL,
+//         (unsigned long) MYSQL_AUDIT_SERVER_SHUTDOWN_ALL,
+//         (unsigned long) MYSQL_AUDIT_COMMAND_ALL,
+//         (unsigned long) MYSQL_AUDIT_QUERY_ALL,
+//         (unsigned long) MYSQL_AUDIT_STORED_PROGRAM_ALL}
+        { (unsigned long) MYSQL_AUDIT_GENERAL_CLASSMASK |
+                          MYSQL_AUDIT_CONNECTION_CLASSMASK }
     };
 
 /*
