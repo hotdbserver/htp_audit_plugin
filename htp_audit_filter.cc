@@ -170,10 +170,12 @@ int htp_audit_reorg_filter_item(filter_item_t *filter_item)
 
 inline int get_sub_class_index(const int sub_class)
 {
-  int sub_class_index, sub_class_value;
+/*  int sub_class_index, sub_class_value;
   for (sub_class_index = 0, sub_class_value = sub_class;
        sub_class_value > 1; sub_class_value = sub_class_value >> 1, sub_class_index++);
-  return (sub_class <= 0 ? sub_class : sub_class_index);
+  return (sub_class <= 0 ? sub_class : sub_class_index);*/
+
+  return sub_class;
 }
 
 void htp_audit_init_filter_item(filter_item_t *item)
