@@ -91,6 +91,7 @@ const char *connection_events[] = {
     HTP_AUDIT_EVENT_CONNECTION_SUB_DISCONNECT,
     HTP_AUDIT_EVENT_CONNECTION_SUB_CHANGE_USER
 };
+/*
 
 const char *parse_events[] = {
     HTP_AUDIT_EVENT_PARSE_SUB_PREPARE,
@@ -129,6 +130,7 @@ const char *command_events[] = {
     HTP_AUDIT_EVENT_COMMAND_SUB_START,
     HTP_AUDIT_EVENT_COMMAND_SUB_END
 };
+*/
 
 static void htp_audit_rule_2_str(
     filter_item_t *item, char *buffer, int size)
@@ -262,7 +264,7 @@ static void htp_audit_rule_2_str(
 
     need_semicolon = false;
 
-    //parse event
+    /*//parse event
     if (item->audit_all_parse) {
       const char *all_parse = HTP_AUDIT_EVENT_PARSE_CLASS;
       strcpy(buffer_index, all_parse);
@@ -427,9 +429,9 @@ static void htp_audit_rule_2_str(
       buffer_index -= strlen(HTP_AUDIT_EVENT_GLOBAL_VARIABLE_CLASS);
       *buffer_index = 0;
     }
-    need_semicolon = false;
+    need_semicolon = false;*/
 
-    //command event
+    /*//command event
     if (item->audit_all_command) {
       const char *all_command = HTP_AUDIT_EVENT_COMMAND_CLASS;
       strcpy(buffer_index, all_command);
@@ -469,9 +471,9 @@ static void htp_audit_rule_2_str(
       *buffer_index = 0;
     }
 
-    need_semicolon = false;
+    need_semicolon = false;*/
 
-    //query event
+    /*//query event
     if (item->audit_all_query) {
       const char *all_query = HTP_AUDIT_EVENT_QUERY_CLASS;
       strcpy(buffer_index, all_query);
@@ -510,8 +512,9 @@ static void htp_audit_rule_2_str(
       buffer_index -= strlen(HTP_AUDIT_EVENT_QUERY_CLASS);
       *buffer_index = 0;
     }
-
+*/
     //need_semicolon=false;
+/*
 
     strcpy(buffer_index, HTP_AUDIT_EVENT_STARTUP_CLASS);
     buffer_index += strlen(HTP_AUDIT_EVENT_STARTUP_CLASS);
@@ -554,6 +557,7 @@ static void htp_audit_rule_2_str(
       buffer_index -= strlen(HTP_AUDIT_EVENT_STORED_PROGRAM_CLASS);
       *buffer_index = 0;
     }
+    */
 
     if (*(buffer_index - 1) == '{') {
       buffer_index -= 2;
@@ -561,6 +565,7 @@ static void htp_audit_rule_2_str(
     }
     //buffer_index--;
     // *buffer_index=0;
+
 
   }
   //command

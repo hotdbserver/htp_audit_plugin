@@ -57,6 +57,7 @@ void number_of_calls_connection_connect_incr();
 void number_of_calls_connection_disconnect_incr();
 
 void number_of_calls_connection_change_user_incr();
+/*
 
 void number_of_calls_connection_pre_authenticate_incr();
 
@@ -105,6 +106,7 @@ void number_of_calls_authorization_procedure_incr();
 void number_of_calls_authorization_proxy_incr();
 
 void number_of_calls_stored_program_incr();
+*/
 
 void number_of_records_incr();
 
@@ -121,6 +123,7 @@ void number_of_records_connection_connect_incr();
 void number_of_records_connection_disconnect_incr();
 
 void number_of_records_connection_change_user_incr();
+/*
 
 void number_of_records_connection_pre_authenticate_incr();
 
@@ -169,6 +172,7 @@ void number_of_records_authorization_procedure_incr();
 void number_of_records_authorization_proxy_incr();
 
 void number_of_records_stored_program_incr();
+*/
 
 void htp_audit_deinit_status();
 

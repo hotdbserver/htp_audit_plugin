@@ -59,7 +59,7 @@ void audit_connection_disconnect(const struct mysql_event_connection *event);
 
 void audit_connection_change_user(const struct mysql_event_connection *event);
 
-void audit_connection_pre_authenticate(const struct mysql_event_connection *event);
+//void audit_connection_pre_authenticate(const struct mysql_event_connection *event);
 
 void audit_general_log(const struct mysql_event_general *event);
 
@@ -68,6 +68,7 @@ void audit_general_error(const struct mysql_event_general *event);
 void audit_general_status(const struct mysql_event_general *event);
 
 void audit_general_result(const struct mysql_event_general *event);
+/*
 
 void audit_parse_preparse(const struct mysql_event_parse *event);
 
@@ -116,6 +117,7 @@ void audit_global_variable_set(const struct mysql_event_global_variable *event);
 void audit_query_start(const struct mysql_event_query *event);
 
 void audit_stored_program_event(const struct mysql_event_stored_program *event);
+*/
 
 void htp_audit_process_event(MYSQL_THD thd __attribute__((unused)), unsigned int event_class, const void *event);
 
@@ -155,51 +157,51 @@ void htp_audit_deinit_lock();
 #define HTP_AUDIT_EVENT_CONNECTION_SUB_CHANGE_USER "change user"
 
 // parse events
-#define HTP_AUDIT_EVENT_PARSE_CLASS "parse"
+/*#define HTP_AUDIT_EVENT_PARSE_CLASS "parse"
 #define HTP_AUDIT_EVENT_PARSE_SUB_PREPARE "prepare"
-#define HTP_AUDIT_EVENT_PARSE_SUB_POSTPARE "postpare"
+#define HTP_AUDIT_EVENT_PARSE_SUB_POSTPARE "postpare"*/
 
 // authorization events
 #define HTP_AUDIT_EVENT_AUTHORIZATION_CLASS "authorization"
-#define HTP_AUDIT_EVENT_AUTHORIZAITON_SUB_USER "user"
+/*#define HTP_AUDIT_EVENT_AUTHORIZAITON_SUB_USER "user"
 #define HTP_AUDIT_EVENT_AUTHORIZAITON_SUB_DB "db"
 #define HTP_AUDIT_EVENT_AUTHORIZAITON_SUB_TABLE "table"
 #define HTP_AUDIT_EVENT_AUTHORIZAITON_SUB_COLUMN "column"
 #define HTP_AUDIT_EVENT_AUTHORIZAITON_SUB_PROCEDURE "procedure"
-#define HTP_AUDIT_EVENT_AUTHORIZAITON_SUB_PROXY "proxy"
+#define HTP_AUDIT_EVENT_AUTHORIZAITON_SUB_PROXY "proxy"*/
 
 // table access events
 #define HTP_AUDIT_EVENT_TABLE_ACCESS_CLASS "table access"
-#define HTP_AUDIT_EVENT_TABLE_ACCESS_SUB_READ "read"
+/*#define HTP_AUDIT_EVENT_TABLE_ACCESS_SUB_READ "read"
 #define HTP_AUDIT_EVENT_TABLE_ACCESS_SUB_INSERT "insert"
 #define HTP_AUDIT_EVENT_TABLE_ACCESS_SUB_UPDATE "update"
-#define HTP_AUDIT_EVENT_TABLE_ACCESS_SUB_DELETE "delete"
+#define HTP_AUDIT_EVENT_TABLE_ACCESS_SUB_DELETE "delete"*/
 
 // global variable events
-#define HTP_AUDIT_EVENT_GLOBAL_VARIABLE_CLASS "global variable"
+/*#define HTP_AUDIT_EVENT_GLOBAL_VARIABLE_CLASS "global variable"
 #define HTP_AUDIT_EVENT_GLOBAL_VARIABLE_SUB_GET "get"
-#define HTP_AUDIT_EVENT_GLOBAL_VARIABLE_SUB_SET "set"
+#define HTP_AUDIT_EVENT_GLOBAL_VARIABLE_SUB_SET "set"*/
 
 // command events
-#define HTP_AUDIT_EVENT_COMMAND_CLASS "command"
+/*#define HTP_AUDIT_EVENT_COMMAND_CLASS "command"
 #define HTP_AUDIT_EVENT_COMMAND_SUB_START "start"
-#define HTP_AUDIT_EVENT_COMMAND_SUB_END "end"
+#define HTP_AUDIT_EVENT_COMMAND_SUB_END "end"*/
 
 // query events
-#define HTP_AUDIT_EVENT_QUERY_CLASS "query"
+/*#define HTP_AUDIT_EVENT_QUERY_CLASS "query"
 #define HTP_AUDIT_EVENT_QUERY_SUB_START "start"
 #define HTP_AUDIT_EVENT_QUERY_SUB_NESTED_START "nested start"
 #define HTP_AUDIT_EVENT_QUERY_SUB_STATUS_END "end"
-#define HTP_AUDIT_EVENT_QUERY_SUB_NESTED_STATUS_END "nested end"
+#define HTP_AUDIT_EVENT_QUERY_SUB_NESTED_STATUS_END "nested end"*/
 
 // startup events
-#define HTP_AUDIT_EVENT_STARTUP_CLASS "server startup"
+/*#define HTP_AUDIT_EVENT_STARTUP_CLASS "server startup"*/
 
 //shutdown events
-#define HTP_AUDIT_EVENT_SHUTDOWN_CLASS "server shutdown"
+/*#define HTP_AUDIT_EVENT_SHUTDOWN_CLASS "server shutdown"*/
 
 //stored program events
-#define HTP_AUDIT_EVENT_STORED_PROGRAM_CLASS "stored program"
+/*#define HTP_AUDIT_EVENT_STORED_PROGRAM_CLASS "stored program"*/
 
 /* 审计事件过滤 */
 #define MAX_FILTER_NAME_LENGTH (128)
@@ -214,13 +216,13 @@ void htp_audit_deinit_lock();
 
 //根据plugin_audit的subclass的数目决定
 #define MAX_FILTER_GENERAL_EVENTS (4)
-#define MAX_FILTER_CONNECTION_EVENTS (4)
-#define MAX_FILTER_PARSE_EVENTS (2)
+#define MAX_FILTER_CONNECTION_EVENTS (3)
+/*#define MAX_FILTER_PARSE_EVENTS (2)
 #define MAX_FILTER_COMMAND_EVENTS (2)
 #define MAX_FILTER_AUTHORIZATION_EVENTS (6)
 #define MAX_FILTER_TABLE_ACCESS_EVENTS (4)
 #define MAX_FILTER_GLOBAL_VARIABLE_EVENTS (2)
-#define MAX_FILTER_QUERY_EVENTS (4)
+#define MAX_FILTER_QUERY_EVENTS (4)*/
 
 #define MAX_FILTER_COMMAND (128)
 #define MAX_FILTER_COMMAND_BUFFER_SIZE (MAX_FILTER_COMMAND + 1)
@@ -317,16 +319,17 @@ struct filter_item_struct
   //事件(event)相关
   bool event_setted;
   bool audit_all_event;  //event=all,初始化为-1，表示未设置
-  bool audit_event_startup;
+/*  bool audit_event_startup;
   bool audit_event_shutdown;
-  bool audit_event_stored_program;
+  bool audit_event_stored_program;*/
   bool audit_all_connection; //event=connection
   int connection_events[MAX_FILTER_CONNECTION_EVENTS];
   //bool connection_events_setted;
   bool audit_all_general;  //event=general
   int general_events[MAX_FILTER_GENERAL_EVENTS];
   //bool general_events_setted;
-  bool audit_all_parse;
+
+/*  bool audit_all_parse;
   int parse_events[MAX_FILTER_PARSE_EVENTS];
   bool audit_all_authorization;
   int authorization_events[MAX_FILTER_AUTHORIZATION_EVENTS];
@@ -336,8 +339,10 @@ struct filter_item_struct
   int global_variable_events[MAX_FILTER_GLOBAL_VARIABLE_EVENTS];
   bool audit_all_query;
   int query_events[MAX_FILTER_QUERY_EVENTS];
+
   bool audit_all_command;
   int command_events[MAX_FILTER_COMMAND_EVENTS];
+    */
   bool command_setted;
   char command[MAX_FILTER_COMMAND_BUFFER_SIZE];
   int command_length;
@@ -365,8 +370,8 @@ struct event_info_struct
   const char *query;
   const char *name;
   const char *sql_command;
-  const char *database;
-  const char *table;
+  /*const char *database;
+  const char *table;*/
 };
 typedef struct event_info_struct event_info_t;
 

@@ -189,18 +189,18 @@ void htp_audit_init_filter_item(filter_item_t *item)
   item->user[0] = 0;
   item->user_length = 0;
   item->event_setted = false;
-  item->audit_event_startup = false;
+/*  item->audit_event_startup = false;
   item->audit_event_shutdown = false;
-  item->audit_event_stored_program = false;
+  item->audit_event_stored_program = false;*/
   item->audit_all_event = false;
   item->audit_all_general = false;
   item->audit_all_connection = false;
-  item->audit_all_authorization = false;
+ /* item->audit_all_authorization = false;
   item->audit_all_global_variable = false;
   item->audit_all_parse = false;
   item->audit_all_query = false;
   item->audit_all_table_access = false;
-  item->audit_all_command = false;
+  item->audit_all_command = false;*/
   for (int i = 0; i < MAX_FILTER_GENERAL_EVENTS; i++)
   {
     item->general_events[i] = EVENT_UNSETTED;
@@ -209,7 +209,7 @@ void htp_audit_init_filter_item(filter_item_t *item)
   {
     item->connection_events[i] = EVENT_UNSETTED;
   }
-  for (int i = 0; i < MAX_FILTER_PARSE_EVENTS; i++)
+ /* for (int i = 0; i < MAX_FILTER_PARSE_EVENTS; i++)
   {
     item->parse_events[i] = EVENT_UNSETTED;
   }
@@ -233,6 +233,7 @@ void htp_audit_init_filter_item(filter_item_t *item)
   {
     item->command_events[i] = EVENT_UNSETTED;
   }
+  */
   item->command_setted = false;
   item->command[0] = 0;
   item->command_length = 0;
@@ -1092,7 +1093,7 @@ int htp_audit_parse_filter(const char *filter_str, filter_item_t *item)
   {
     item->general_events[i] = -1;
   }
-  for (int i = 0; i < MAX_FILTER_TABLE_ACCESS_EVENTS; i++)
+  /*for (int i = 0; i < MAX_FILTER_TABLE_ACCESS_EVENTS; i++)
   {
     item->table_access_events[i] = -1;
   }
@@ -1115,7 +1116,7 @@ int htp_audit_parse_filter(const char *filter_str, filter_item_t *item)
   for (int i = 0; i < MAX_FILTER_COMMAND_EVENTS; i++)
   {
     item->command_events[i] = -1;
-  }
+  }*/
 
   return htp_audit_parse_input(filter_str, item);
 }

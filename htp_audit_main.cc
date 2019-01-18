@@ -302,6 +302,7 @@ static int htp_audit_init_env_from_config(config_t *config)
         return -1;
       }
     }
+
     else if (strcasecmp(group->name, HTP_AUDIT_GENERAL_GROUP_NAME) == 0)
     {
       if (htp_audit_general_from_config(group))
