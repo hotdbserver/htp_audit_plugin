@@ -14,7 +14,8 @@ HotPU's audit plugin developed and test on MySQL 5.7.18. Code can be compiled un
 
 Copy file to MySQL source directory plugin and compile as other MySQL plugin
 
-##manual
+## manual
+
 looking for help for MS word
 
 ## Authors
