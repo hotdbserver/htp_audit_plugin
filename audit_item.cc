@@ -16,7 +16,7 @@
 */
 #include <stdio.h>
 #include <time.h>
-#include <my_global.h>
+//#include <my_global.h>
 #include <mysql/plugin.h>
 #include <mysql/plugin_audit.h>
 #include <string.h>

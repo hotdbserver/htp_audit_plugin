@@ -15,16 +15,16 @@
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 */#include <stdio.h>
 #include <string.h>
-#include <my_global.h>
+//#include <my_global.h>
 #include <mysql/plugin.h>
 #include <mysql/plugin_audit.h>
-#include <sql_plugin.h>
+#include <sql/sql_plugin.h>
 //#include "htp_audit.h"
 #include <list>
 #include <ctype.h>
 #include <string>
 #include "config.h"
-#include "log.h"
+#include "sql/log.h"
 
 using namespace std;
 
@@ -257,7 +257,7 @@ class Logger
   /*
     return : 0 success, -1 fail
    */
-  static int Initialize(const char *log, const char *elog, my_bool enable_buffer);
+  static int Initialize(const char *log, const char *elog, bool enable_buffer);
 
   /*
     return : 0 success, -1 fail
@@ -401,7 +401,7 @@ int htp_audit_reorg_filter_item(filter_item_t *filter_item);
 //current_used_filter
 //list<int> filters;
 //char filter_using_map[MAX_FILTER_ITEMS];
-extern my_bool _debug_on_;
+extern bool _debug_on_;
 
 void htp_audit_lock_filter_and_var();
 

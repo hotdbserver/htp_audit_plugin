@@ -17,16 +17,16 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <my_global.h>
+//#include <my_global.h>
 #include <mysql/plugin.h>
 #include <mysql/plugin_audit.h>
-#include <sql_plugin.h>
+#include <sql/sql_plugin.h>
 //#include "htp_audit.h"
 #include <list>
 #include <ctype.h>
 #include <string>
 #include "config.h"
-#include "log.h"
+#include "sql/log.h"
 #include "htp_audit_vars.h"
 #include "htp_audit_filter.h"
 /* 变量 */
@@ -42,13 +42,13 @@ char htp_audit_error_log_file[HTP_AUDIT_CONFIG_MAX_FILE_NAME + 1];
 
 char *log_file = NULL;
 char *error_log_file = NULL;
-my_bool enable_buffer = FALSE;
+bool enable_buffer = FALSE;
 
 static char *rules = NULL;
 static char *add_rule = NULL;
 static char *remove_rule = NULL;
 
-static my_bool flush_log = FALSE;
+static bool flush_log = FALSE;
 static int buffer_size = 32;  //measure in KB.32 means 32KB
 static char version_inner[] = HTP_AUDIT_VERSION;
 static char *version = version_inner;
@@ -133,6 +133,7 @@ const char *command_events[] = {
 static void htp_audit_rule_2_str(
     filter_item_t *item, char *buffer, int size)
 {
+  size = size; // mysql 8.0 编译
   char *buffer_index = buffer;
 
   //name
@@ -1094,7 +1095,7 @@ void number_of_records_stored_program_incr()
 /*
   Plugin status variables for SHOW STATUS
 */
-struct st_mysql_show_var htp_audit_status[] =
+struct SHOW_VAR htp_audit_status[] =
     {
         {"Htp_audit_called",
          (char *) &number_of_calls,
@@ -1356,7 +1357,7 @@ static rules2str_buffer_t rules_buffer;
 
 static void htp_audit_add_rule_update(
     THD *thd,    /*!< in: thread handle */
-    struct st_mysql_sys_var *var,    /*!< in: pointer to
+    SYS_VAR *var,    /*!< in: pointer to
 							system variable */
     void *var_ptr,  /*!< out: where the
 							formal string goes */
@@ -1366,7 +1367,7 @@ static void htp_audit_add_rule_update(
 static int htp_audit_add_rule_validate(
     /*=============================*/
     THD *thd,  /*!< in: thread handle */
-    struct st_mysql_sys_var *var,  /*!< in: pointer to system
+    SYS_VAR *var,  /*!< in: pointer to system
             variable */
     void *save,   /*!< out: immediate result
             for update function */
@@ -1375,7 +1376,7 @@ static int htp_audit_add_rule_validate(
 
 static void htp_audit_remove_rule_update(
     THD *thd,    /*!< in: thread handle */
-    struct st_mysql_sys_var *var,    /*!< in: pointer to
+    SYS_VAR *var,    /*!< in: pointer to
 							system variable */
     void *var_ptr,  /*!< out: where the
 							formal string goes */
@@ -1385,7 +1386,7 @@ static void htp_audit_remove_rule_update(
 static int htp_audit_remove_rule_validate(
     /*=============================*/
     THD *thd,  /*!< in: thread handle */
-    struct st_mysql_sys_var *var,  /*!< in: pointer to system
+    SYS_VAR *var,  /*!< in: pointer to system
             variable */
     void *save,   /*!< out: immediate result
             for update function */
@@ -1393,7 +1394,7 @@ static int htp_audit_remove_rule_validate(
 
 static void htp_audit_set_enable_buffer_update(
     THD *thd,    /*!< in: thread handle */
-    struct st_mysql_sys_var *var,    /*!< in: pointer to
+    SYS_VAR *var,    /*!< in: pointer to
 							system variable */
     void *var_ptr,  /*!< out: where the
 							formal string goes */
@@ -1403,7 +1404,7 @@ static void htp_audit_set_enable_buffer_update(
 static int htp_audit_flush_log_validate(
     /*=============================*/
     THD *thd,  /*!< in: thread handle */
-    struct st_mysql_sys_var *var,  /*!< in: pointer to system
+    SYS_VAR *var,  /*!< in: pointer to system
             variable */
     void *save,   /*!< out: immediate result
             for update function */
@@ -1411,7 +1412,7 @@ static int htp_audit_flush_log_validate(
 
 static void htp_audit_flush_log_update(
     THD *thd,    /*!< in: thread handle */
-    struct st_mysql_sys_var *var,    /*!< in: pointer to
+    SYS_VAR *var,    /*!< in: pointer to
 							system variable */
     void *var_ptr,  /*!< out: where the
 							formal string goes */
@@ -1420,7 +1421,7 @@ static void htp_audit_flush_log_update(
 static int htp_audit_set_buffer_size_validate(
     /*=============================*/
     THD *thd,  /*!< in: thread handle */
-    struct st_mysql_sys_var *var,  /*!< in: pointer to system
+    SYS_VAR *var,  /*!< in: pointer to system
                 variable */
     void *save,   /*!< out: immediate result
                       for update function */
@@ -1428,7 +1429,7 @@ static int htp_audit_set_buffer_size_validate(
 
 static void htp_audit_set_buffer_size_update(
     THD *thd,    /*!< in: thread handle */
-    struct st_mysql_sys_var *var,    /*!< in: pointer to
+    SYS_VAR *var,    /*!< in: pointer to
 							system variable */
     void *var_ptr,  /*!< out: where the
 							formal string goes */
@@ -1511,7 +1512,7 @@ static MYSQL_SYSVAR_STR(version, version
 , NULL, NULL
 , NULL);
 
-struct st_mysql_sys_var *htp_audit_sys_var[] = {
+SYS_VAR *htp_audit_sys_var[] = {
     MYSQL_SYSVAR(log_file), MYSQL_SYSVAR(error_log_file), MYSQL_SYSVAR(rules), MYSQL_SYSVAR(add_rule),
     MYSQL_SYSVAR(remove_rule), MYSQL_SYSVAR(enable_buffer), MYSQL_SYSVAR(flush_log), MYSQL_SYSVAR(buffer_size),
     MYSQL_SYSVAR(version), 0
@@ -1552,12 +1553,14 @@ a callback with MySQL.
 static int htp_audit_add_rule_validate(
     /*=============================*/
     THD *thd,  /*!< in: thread handle */
-    struct st_mysql_sys_var *var,  /*!< in: pointer to system
+    SYS_VAR *var,  /*!< in: pointer to system
                       variable */
     void *save,   /*!< out: immediate result
                       for update function */
     struct st_mysql_value *value)  /*!< in: incoming string */
 {
+
+
   const char *input;
   char buff[MAX_ADD_RULE_LENGTH + 1];
   int len = sizeof(buff);
@@ -1600,18 +1603,27 @@ static int htp_audit_add_rule_validate(
   if (success)
     return (0);
 
+  // mysql 8.0 编译
+  thd = thd;
+  var = var;
+
   return (1);
 }
 
 static void htp_audit_add_rule_update(
     THD *thd,    /*!< in: thread handle */
-    struct st_mysql_sys_var *var,    /*!< in: pointer to
+    SYS_VAR *var,    /*!< in: pointer to
 							system variable */
     void *var_ptr,  /*!< out: where the
 							formal string goes */
     const void *save)    /*!< in: immediate result
 							from check function */
 {
+  // mysql 8.0 编译
+  thd = thd;
+  var = var;
+
+
   DBUG_ENTER("htp_audit_add_rule_update");
   const char *str = *(const char **) save;
   DBUG_PRINT("add rule update value", ("str: %s", str));
@@ -1657,12 +1669,15 @@ a callback with MySQL.
 static int htp_audit_remove_rule_validate(
     /*=============================*/
     THD *thd,  /*!< in: thread handle */
-    struct st_mysql_sys_var *var,  /*!< in: pointer to system
+    SYS_VAR *var,  /*!< in: pointer to system
                       variable */
     void *save,   /*!< out: immediate result
                       for update function */
     struct st_mysql_value *value)  /*!< in: incoming string */
 {
+
+
+
   const char *input;
   char buff[MAX_ADD_RULE_LENGTH + 1];
   int len = sizeof(buff);
@@ -1688,18 +1703,25 @@ static int htp_audit_remove_rule_validate(
   if (success)
     return (0);
 
+  // mysql 8.0 编译
+  thd = thd;
+  var = var;
+
   return (1);
 }
 
 static void htp_audit_remove_rule_update(
     THD *thd,    /*!< in: thread handle */
-    struct st_mysql_sys_var *var,    /*!< in: pointer to
+    SYS_VAR *var,    /*!< in: pointer to
 							system variable */
     void *var_ptr,  /*!< out: where the
 							formal string goes */
     const void *save)    /*!< in: immediate result
 							from check function */
 {
+
+
+
   DBUG_ENTER("htp_audit_remove_rule_update");
   const char *str = *(const char **) save;
   DBUG_PRINT("add rule update value", ("str: %s", str));
@@ -1731,20 +1753,29 @@ static void htp_audit_remove_rule_update(
   *(const char **) var_ptr = remove_rule;
   htp_audit_unlock_filter_and_var();
   //*(const char**)var_ptr= “hello update add rule”;
+
+  // mysql 8.0 编译
+  thd = thd;
+  var = var;
+
+
   DBUG_VOID_RETURN;
 }
 
 static void htp_audit_set_enable_buffer_update(
     THD *thd,    /*!< in: thread handle */
-    struct st_mysql_sys_var *var,    /*!< in: pointer to
+    SYS_VAR *var,    /*!< in: pointer to
 							system variable */
     void *var_ptr,  /*!< out: where the
 							formal string goes */
     const void *save)    /*!< in: immediate result
 							from check function */
 {
+
+
+
   DBUG_ENTER("htp_audit_set_enable_buffer_update");
-  my_bool nvalue = (*(static_cast<const my_bool *>(save)) != 0);
+  bool nvalue = (*(static_cast<const bool *>(save)) != 0);
 
   if (nvalue == enable_buffer)
     DBUG_VOID_RETURN;
@@ -1760,18 +1791,27 @@ static void htp_audit_set_enable_buffer_update(
 
   enable_buffer = nvalue;
 
+
+  // mysql 8.0 编译
+  thd = thd;
+  var = var;
+  var_ptr = var_ptr;
+
   DBUG_VOID_RETURN;
 }
 
 static int htp_audit_flush_log_validate(
     /*=============================*/
     THD *thd,  /*!< in: thread handle */
-    struct st_mysql_sys_var *var,  /*!< in: pointer to system
+    SYS_VAR *var,  /*!< in: pointer to system
                       variable */
     void *save,   /*!< out: immediate result
                       for update function */
     struct st_mysql_value *value)  /*!< in: incoming string */
 {
+
+
+
   DBUG_ENTER("htp_audit_flush_log_validate");
   long long tmp;
 
@@ -1790,21 +1830,34 @@ static int htp_audit_flush_log_validate(
     }
   }
 
+  // mysql 8.0 编译
+  thd = thd;
+  var = var;
+  save = save;
+
   DBUG_RETURN(1);
 }
 
 static void htp_audit_flush_log_update(
     THD *thd,    /*!< in: thread handle */
-    struct st_mysql_sys_var *var,    /*!< in: pointer to
+    SYS_VAR *var,    /*!< in: pointer to
 							system variable */
     void *var_ptr,  /*!< out: where the
 							formal string goes */
     const void *save)    /*!< in: immediate result
 							from check function */
 {
+
+
   DBUG_ENTER("htp_audit_flush_log_update");
 
   //  my_bool flush = *(my_bool*) save;
+
+  // mysql 8.0 编译
+  thd = thd;
+  var = var;
+  var_ptr = var_ptr;
+  save = save;
 
   DBUG_VOID_RETURN;
 }
@@ -1812,12 +1865,15 @@ static void htp_audit_flush_log_update(
 static int htp_audit_set_buffer_size_validate(
     /*=============================*/
     THD *thd,  /*!< in: thread handle */
-    struct st_mysql_sys_var *var,  /*!< in: pointer to system
+    SYS_VAR *var,  /*!< in: pointer to system
                       variable */
     void *save,   /*!< out: immediate result
                       for update function */
     struct st_mysql_value *value)  /*!< in: incoming string */
 {
+
+
+
   DBUG_ENTER("htp_audit_flush_log_validate");
 
   long long tmp;
@@ -1831,18 +1887,23 @@ static int htp_audit_set_buffer_size_validate(
 
   *static_cast<ulonglong *>(save) = setted_value;
 
+  // mysql 8.0 编译
+  thd = thd;
+  var = var;
   DBUG_RETURN(0);
 }
 
 static void htp_audit_set_buffer_size_update(
     THD *thd,    /*!< in: thread handle */
-    struct st_mysql_sys_var *var,    /*!< in: pointer to
+    SYS_VAR *var,    /*!< in: pointer to
 							system variable */
     void *var_ptr,  /*!< out: where the
 							formal string goes */
     const void *save)    /*!< in: immediate result
 							from check function */
 {
+
+
   DBUG_ENTER("htp_audit_set_buffer_size_update");
 
   int setted_value = *((int *) save);
@@ -1851,6 +1912,10 @@ static void htp_audit_set_buffer_size_update(
 
   Logger::SetBufferSize(setted_value);
   buffer_size = setted_value;
+  // mysql 8.0 编译
+  thd = thd;
+  var = var;
+  var_ptr = var_ptr;
 
   DBUG_VOID_RETURN;
 }

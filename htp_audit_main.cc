@@ -17,25 +17,25 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <my_global.h>
+//#include <my_global.h>
 #include <list>
 #include <ctype.h>
 #include <string>
 #include "config.h"
-#include "log.h"
+#include "sql/log.h"
 #include "htp_audit_filter.h"
 #include "htp_audit_vars.h"
 #include <mysql/plugin.h>
 #include <mysql/plugin_audit.h>
-#include <sql_plugin.h>
+#include <sql/sql_plugin.h>
 
 extern char htp_audit_log_file[];
 extern char htp_audit_error_log_file[];
 extern char *log_file;
 extern char *error_log_file;
-extern my_bool enable_buffer;
-extern struct st_mysql_show_var htp_audit_status[];
-extern struct st_mysql_sys_var *htp_audit_sys_var[];
+extern bool enable_buffer;
+extern SHOW_VAR htp_audit_status[];
+extern SYS_VAR *htp_audit_sys_var[];
 
 /* 配置读入，并根据配置构造运行环境 */
 static int htp_audit_rules_from_config(config_group_t *group)
@@ -518,8 +518,9 @@ mysql_declare_plugin(htp_audit)
             "Htp audit plugin",           /* description                        */
             PLUGIN_LICENSE_GPL,
             htp_audit_plugin_init,        /* init function (when loaded)     */
+            NULL,                         /* check uninstall function        */
             htp_audit_plugin_deinit,      /* deinit function (when unloaded) */
-            0x0001,                       /* version                         */
+            0x0003,                       /* version                         */
             htp_audit_status,             /* status variables                */
             htp_audit_sys_var,            /* system variables                */
             NULL,

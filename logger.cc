@@ -126,7 +126,7 @@ static Logger *logger = NULL;
 static Logger *elogger = NULL;
 static bool log_initialized = false;
 
-int Logger::Initialize(const char *log, const char *elog, my_bool enable_buffer)
+int Logger::Initialize(const char *log, const char *elog, bool enable_buffer)
 {
   logger = new Logger(log);
   logger->EnableBuffer(enable_buffer);

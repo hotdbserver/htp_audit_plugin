@@ -16,16 +16,16 @@
 */
 #include <stdio.h>
 #include <string.h>
-#include <my_global.h>
+//#include <my_global.h>
 #include <mysql/plugin.h>
 #include <mysql/plugin_audit.h>
-#include <sql_plugin.h>
+//#include <sql_plugin.h>
 //#include "htp_audit.h"
 #include <list>
 #include <ctype.h>
 #include <string>
 #include "config.h"
-#include "log.h"
+//#include "sql/log.h"
 #include "htp_audit_filter.h"
 
 #if !defined(__attribute__) && (defined(__cplusplus) || !defined(__GNUC__) || __GNUC__ == 2 && __GNUC_MINOR__ < 8)
@@ -40,14 +40,14 @@ using namespace std;
 void
 htp_audit_logf(
     int level,       /*!< in: warning level */
-    const char *format, /*!< printf format */
+    const char *formatx, /*!< printf format */
     ...
 )
 {
-  char *str;
+  char *str = NULL;
   va_list args;
 
-  va_start(args, format);
+  va_start(args, formatx);
 
 #ifdef __WIN__
   int		size = _vscprintf(format, args) + 1;
@@ -55,7 +55,12 @@ htp_audit_logf(
   str[size - 1] = 0x0;
   vsnprintf(str, size, format, args);
 #elif HAVE_VASPRINTF
-  vasprintf(&str, format, args);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Werror"
+  //vasprintf(&str, formatx, args);
+#pragma GCC diagnostic pop
+  //char buffer[1024 * 8];
+  //vsnprintf(buffer, sizeof(buffer), format, args);
 
 #else
   /* Use a fixed length string. */
@@ -63,13 +68,13 @@ htp_audit_logf(
   my_vsnprintf(str, BUFSIZ, format, args);
 #endif /* __WIN__ */
 
-  switch (level)
+  /*switch (level)
   {
     case HTP_AUDIT_LOG_LEVEL_INFO:
       sql_print_information("Htp Audit: %s", str);
       break;
     case HTP_AUDIT_LOG_LEVEL_WARN:
-      sql_print_warning("Htp Audit: %s", str);
+      //sql_print_warning("Htp Audit: %s", str);
       break;
     case HTP_AUDIT_LOG_LEVEL_ERROR:
       sql_print_error("Htp Audit: %s", str);
@@ -77,7 +82,7 @@ htp_audit_logf(
     case HTP_AUDIT_LOG_LEVEL_FATAL:
       sql_print_error("Htp Audit: %s", str);
       break;
-  }
+  }*/
 
   va_end(args);
   free(str);
@@ -163,10 +168,10 @@ list<int> filters;
 filter_item_t filter_items[MAX_FILTER_ITEMS];
 static char filter_using_map[MAX_FILTER_ITEMS];
 
-int htp_audit_reorg_filter_item(filter_item_t *filter_item)
+/*int htp_audit_reorg_filter_item(filter_item_t *filter_item)
 {
   return 0;
-};
+};*/
 
 inline int get_sub_class_index(const int sub_class)
 {
@@ -1210,7 +1215,7 @@ int htp_audit_parse_remove_input(const char *remove_str, remove_parse_t *parse)
 }
 
 filter_result_enum
-htp_audit_filter_event(event_info_t *info, filter_item_t *item, unsigned int event_class)
+htp_audit_filter_event(event_info_t *info, filter_item_t *item/*, unsigned int event_class*/)
 {
   /*
   //host

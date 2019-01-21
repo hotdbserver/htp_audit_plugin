@@ -16,16 +16,16 @@
 */
 #include <stdio.h>
 #include <string.h>
-#include <my_global.h>
+//#include <my_global.h>
 #include <mysql/plugin.h>
 #include <mysql/plugin_audit.h>
-#include <sql_plugin.h>
+#include <sql/sql_plugin.h>
 //#include "htp_audit.h"
 #include <list>
 #include <ctype.h>
 #include <string>
 #include "config.h"
-#include "log.h"
+#include "sql/log.h"
 #include "htp_audit_vars.h"
 #include "htp_audit_filter.h"
 
@@ -300,6 +300,13 @@ static int htp_audit_process_startup_event(
   //audit_server_startup_startup(event_startup);
   number_of_calls_server_startup_incr();
   number_of_records_server_startup_incr();
+
+
+  // mysql 8.0 编译
+  event_class = event_class;
+  event = event;
+
+
   return 0;
 }
 
