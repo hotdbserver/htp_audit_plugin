@@ -106,6 +106,16 @@ void number_of_calls_authorization_proxy_incr();
 
 void number_of_calls_stored_program_incr();
 
+void number_of_calls_authentication_flush_incr();
+
+void number_of_calls_authentication_authid_create_incr();
+
+void number_of_calls_authentication_credential_change_incr();
+
+void number_of_calls_authentication_authid_rename_incr();
+
+void number_of_calls_authentication_authid_drop_incr();
+
 void number_of_records_incr();
 
 void number_of_records_general_log_incr();
@@ -170,6 +180,16 @@ void number_of_records_authorization_proxy_incr();
 
 void number_of_records_stored_program_incr();
 
+void number_of_records_authentication_flush_incr();
+
+void number_of_records_authentication_authid_create_incr();
+
+void number_of_records_authentication_credential_change_incr();
+
+void number_of_records_authentication_authid_rename_incr();
+
+void number_of_records_authentication_authid_drop_incr();
+
 void htp_audit_deinit_status();
 
 void htp_audit_deinit_variable();
@@ -177,5 +197,7 @@ void htp_audit_deinit_variable();
 void htp_audit_init_status();
 
 void htp_audit_init_variable();
+
+
 
 #endif //MYSQL_HTP_AUDIT_VARS_H

@@ -555,6 +555,75 @@ static int htp_audit_process_variable_event(MYSQL_THD thd __attribute__((unused)
   return 0;
 }
 
+static int htp_audit_process_authentication_event(MYSQL_THD thd __attribute__((unused)),
+                                                  unsigned int event_class,
+                                                  const void *event)
+{
+  const struct mysql_event_authentication *event_auth =
+      (const struct mysql_event_authentication *) event;
+
+  event_info_t info;
+  info.main_class = MYSQL_AUDIT_AUTHENTICATION_CLASS;
+  info.sub_class = event_auth->event_subclass;
+
+  switch (event_auth->event_subclass) 
+  {
+    case MYSQL_AUDIT_AUTHENTICATION_FLUSH:
+      number_of_calls_authentication_flush_incr();
+      break;
+    case MYSQL_AUDIT_AUTHENTICATION_AUTHID_CREATE:
+      number_of_calls_authentication_authid_create_incr();
+      break;
+    case MYSQL_AUDIT_AUTHENTICATION_CREDENTIAL_CHANGE:
+      number_of_calls_authentication_credential_change_incr();
+      break;
+    case MYSQL_AUDIT_AUTHENTICATION_AUTHID_RENAME:
+      number_of_calls_authentication_authid_rename_incr();
+      break;
+    case MYSQL_AUDIT_AUTHENTICATION_AUTHID_DROP:
+      number_of_calls_authentication_authid_drop_incr();
+      break;
+    default:
+      break;
+  }
+
+  if (htp_audit_filter_event(&info, event_class) == NOT_AUDIT_EVENT)
+  {
+    return 0;
+  }
+
+  switch (event_auth->event_subclass)
+  {
+    case MYSQL_AUDIT_AUTHENTICATION_FLUSH:
+      number_of_records_authentication_flush_incr();
+      audit_authentication_flush(event_auth);
+      break;
+    case MYSQL_AUDIT_AUTHENTICATION_AUTHID_CREATE:
+      number_of_records_authentication_authid_create_incr();
+      audit_authentication_authid_create(event_auth);
+      // todo
+      break;
+    case MYSQL_AUDIT_AUTHENTICATION_CREDENTIAL_CHANGE:
+      number_of_records_authentication_credential_change_incr();
+      audit_authentication_credential_change(event_auth);
+      // todo
+      break;
+    case MYSQL_AUDIT_AUTHENTICATION_AUTHID_RENAME:
+      number_of_records_authentication_authid_rename_incr();
+      audit_authentication_authid_rename(event_auth);
+      // todo
+      break;
+    case MYSQL_AUDIT_AUTHENTICATION_AUTHID_DROP:
+      number_of_records_authentication_authid_drop_incr();
+      audit_authentication_authid_drop(event_auth);
+      // todo
+      break;
+    default:
+      break;
+  }
+  return 0;
+}
+
 void htp_audit_process_event(MYSQL_THD thd __attribute__((unused)),
                              unsigned int event_class,
                              const void *event)
@@ -592,6 +661,9 @@ void htp_audit_process_event(MYSQL_THD thd __attribute__((unused)),
       break;
     case MYSQL_AUDIT_STORED_PROGRAM_CLASS:
       htp_audit_process_stored_program_event(thd, event_class, event);
+      break;
+    case MYSQL_AUDIT_AUTHENTICATION_CLASS:
+      htp_audit_process_authentication_event(thd, event_class, event);
       break;
     default:
       DBUG_ASSERT(FALSE);

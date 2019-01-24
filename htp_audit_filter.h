@@ -117,6 +117,16 @@ void audit_query_start(const struct mysql_event_query *event);
 
 void audit_stored_program_event(const struct mysql_event_stored_program *event);
 
+void audit_authentication_flush(const struct mysql_event_authentication *event);
+
+void audit_authentication_authid_create(const struct mysql_event_authentication *event);
+
+void audit_authentication_credential_change(const struct mysql_event_authentication *event);
+
+void audit_authentication_authid_rename(const struct mysql_event_authentication *event);
+
+void audit_authentication_authid_drop(const struct mysql_event_authentication *event);
+
 void htp_audit_process_event(MYSQL_THD thd __attribute__((unused)), unsigned int event_class, const void *event);
 
 //void htp_audit_init_filter_item(filter_item_t *item)
@@ -201,6 +211,16 @@ void htp_audit_deinit_lock();
 //stored program events
 #define HTP_AUDIT_EVENT_STORED_PROGRAM_CLASS "stored program"
 
+//authentication events
+#define HTP_AUDIT_EVENT_AUTHENTICATION_CLASS "authentication"
+#define HTP_AUDIT_EVENT_AUTHENTICATION_FLUSH "flush"
+#define HTP_AUDIT_EVENT_AUTHENTICATION_AUTHID_CREATE "authid create"
+#define HTP_AUDIT_EVENT_AUTHENTICATION_CREDENTIAL_CHANGE "credential change"
+#define HTP_AUDIT_EVENT_AUTHENTICATION_AUTHID_RENAME "authid rename"
+#define HTP_AUDIT_EVENT_AUTHENTICATION_AUTHID_DROP "authid drop"
+
+
+
 /* 审计事件过滤 */
 #define MAX_FILTER_NAME_LENGTH (128)
 #define MAX_FILTER_NAME_BUFFER_SIZE (MAX_FILTER_NAME_LENGTH + 1)
@@ -221,6 +241,7 @@ void htp_audit_deinit_lock();
 #define MAX_FILTER_TABLE_ACCESS_EVENTS (4)
 #define MAX_FILTER_GLOBAL_VARIABLE_EVENTS (2)
 #define MAX_FILTER_QUERY_EVENTS (4)
+#define MAX_FILTER_AUTHENTICATION_EVENTS (5)
 
 #define MAX_FILTER_COMMAND (128)
 #define MAX_FILTER_COMMAND_BUFFER_SIZE (MAX_FILTER_COMMAND + 1)
@@ -338,6 +359,8 @@ struct filter_item_struct
   int query_events[MAX_FILTER_QUERY_EVENTS];
   bool audit_all_command;
   int command_events[MAX_FILTER_COMMAND_EVENTS];
+  bool audit_all_authentication;
+  int authentication_events[MAX_FILTER_AUTHENTICATION_EVENTS];
   bool command_setted;
   char command[MAX_FILTER_COMMAND_BUFFER_SIZE];
   int command_length;

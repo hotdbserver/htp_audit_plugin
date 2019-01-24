@@ -130,6 +130,14 @@ const char *command_events[] = {
     HTP_AUDIT_EVENT_COMMAND_SUB_END
 };
 
+const char *authentication_events[] = {
+    HTP_AUDIT_EVENT_AUTHENTICATION_FLUSH,
+    HTP_AUDIT_EVENT_AUTHENTICATION_AUTHID_CREATE,
+    HTP_AUDIT_EVENT_AUTHENTICATION_CREDENTIAL_CHANGE,
+    HTP_AUDIT_EVENT_AUTHENTICATION_AUTHID_RENAME,
+    HTP_AUDIT_EVENT_AUTHENTICATION_AUTHID_DROP
+};
+
 static void htp_audit_rule_2_str(
     filter_item_t *item, char *buffer, int size)
 {
@@ -512,6 +520,49 @@ static void htp_audit_rule_2_str(
       *buffer_index = 0;
     }
 
+    need_semicolon = false;
+
+    //query event
+    if (item->audit_all_authentication) 
+    {
+      const char *all_authentication = HTP_AUDIT_EVENT_AUTHENTICATION_CLASS;
+      strcpy(buffer_index, all_authentication);
+      buffer_index += strlen(all_authentication);
+      strcpy(buffer_index, "}");
+      buffer_index++;
+      need_semicolon = true;
+    }
+    else 
+    {
+      strcpy(buffer_index, HTP_AUDIT_EVENT_AUTHENTICATION_CLASS);
+      buffer_index += strlen(HTP_AUDIT_EVENT_AUTHENTICATION_CLASS);
+      strcpy(buffer_index, ":");
+      buffer_index++;
+      for (int i = 0; i < MAX_FILTER_AUTHENTICATION_EVENTS; i++) 
+      {
+        if (item->authentication_events[i] == EVENT_SETTED) 
+        {
+          strcpy(buffer_index, authentication_events[i]);
+          buffer_index += strlen(authentication_events[i]);
+          strcpy(buffer_index, ",");
+          buffer_index++;
+          need_semicolon = true;
+        }
+      }
+    }
+
+    if (need_semicolon) 
+    {
+      buffer_index--;
+      strcpy(buffer_index, "};{");
+      buffer_index += 3;
+    }
+    else {
+      buffer_index--;
+      buffer_index -= strlen(HTP_AUDIT_EVENT_AUTHENTICATION_CLASS);
+      *buffer_index = 0;
+    }
+
     //need_semicolon=false;
 
     strcpy(buffer_index, HTP_AUDIT_EVENT_STARTUP_CLASS);
@@ -683,6 +734,13 @@ HTP_AUDIT_VAR(global_variable_set)
 
 /* Count MYSQL_AUDIT_STORED_PROGRAM event instances */
 HTP_AUDIT_VAR(stored_program)
+
+/* Count MYSQL_AUDIT_AUTHENTICATION event instances */
+HTP_AUDIT_VAR(authentication_flush)
+HTP_AUDIT_VAR(authentication_authid_create)
+HTP_AUDIT_VAR(authentication_credential_change)
+HTP_AUDIT_VAR(authentication_authid_rename)
+HTP_AUDIT_VAR(authentication_authid_drop)
 
 
 
@@ -864,6 +922,33 @@ void number_of_calls_stored_program_incr()
   number_of_calls_stored_program++;
 }
 
+void number_of_calls_authentication_flush_incr()
+{
+  number_of_calls_authentication_flush++;
+}
+
+void number_of_calls_authentication_authid_create_incr()
+{
+  number_of_calls_authentication_authid_create++;
+}
+
+void number_of_calls_authentication_credential_change_incr()
+{
+  number_of_calls_authentication_credential_change++;
+}
+
+void number_of_calls_authentication_authid_rename_incr()
+{
+  number_of_calls_authentication_authid_rename++;
+}
+
+void number_of_calls_authentication_authid_drop_incr()
+{
+  number_of_calls_authentication_authid_drop++;
+}
+
+
+
 /*被审计的事件统计*/
 static volatile int64_t number_of_records; /* for SHOW STATUS, see below */
 #define HTP_AUDIT_VAR_RECORD(x) static volatile int64_t number_of_records_ ## x;
@@ -931,6 +1016,13 @@ HTP_AUDIT_VAR_RECORD(global_variable_set)
 
 /* Count MYSQL_AUDIT_STORED_PROGRAM_CLASS event instances */
 HTP_AUDIT_VAR_RECORD(stored_program)
+
+/* Count MYSQL_AUDIT_AUTHENTICATION_CLASS event instances */
+HTP_AUDIT_VAR_RECORD(authentication_flush)
+HTP_AUDIT_VAR_RECORD(authentication_authid_create)
+HTP_AUDIT_VAR_RECORD(authentication_credential_change)
+HTP_AUDIT_VAR_RECORD(authentication_authid_rename)
+HTP_AUDIT_VAR_RECORD(authentication_authid_drop)
 
 void number_of_records_incr()
 {
@@ -1092,6 +1184,31 @@ void number_of_records_stored_program_incr()
   number_of_records_stored_program++;
 }
 
+void number_of_records_authentication_flush_incr()
+{
+  number_of_records_authentication_flush++;
+}
+
+void number_of_records_authentication_authid_create_incr()
+{
+  number_of_records_authentication_authid_create++;
+}
+
+void number_of_records_authentication_credential_change_incr()
+{
+  number_of_records_authentication_credential_change++;
+}
+
+void number_of_records_authentication_authid_rename_incr()
+{
+  number_of_records_authentication_authid_rename++;
+}
+
+void number_of_records_authentication_authid_drop_incr()
+{
+  number_of_records_authentication_authid_drop++;
+}
+
 /*
   Plugin status variables for SHOW STATUS
 */
@@ -1187,6 +1304,21 @@ struct SHOW_VAR htp_audit_status[] =
         {"Htp_audit_stored_program_called",
          (char *) &number_of_calls_stored_program,
          SHOW_LONGLONG, SHOW_SCOPE_GLOBAL},
+        {"Htp_audit_authentication_flush_called",
+         (char *) &number_of_calls_authentication_flush,
+         SHOW_LONGLONG, SHOW_SCOPE_GLOBAL},
+        {"Htp_audit_authentication_authid_create_called",
+         (char *) &number_of_calls_authentication_authid_create,
+         SHOW_LONGLONG, SHOW_SCOPE_GLOBAL},
+        {"Htp_audit_authentication_credential_change_calld",
+         (char *) &number_of_calls_authentication_credential_change,
+         SHOW_LONGLONG, SHOW_SCOPE_GLOBAL},
+        {"Htp_audit_authentication_authid_rename_calld",
+         (char *) &number_of_calls_authentication_authid_rename,
+         SHOW_LONGLONG, SHOW_SCOPE_GLOBAL},
+        {"Htp_audit_authentication_authid_drop_calld",
+         (char *) &number_of_calls_authentication_authid_drop,
+         SHOW_LONGLONG, SHOW_SCOPE_GLOBAL},
         {"Htp_audit_recorded",
          (char *) &number_of_records,
          SHOW_LONGLONG, SHOW_SCOPE_GLOBAL},
@@ -1277,6 +1409,21 @@ struct SHOW_VAR htp_audit_status[] =
         {"Htp_audit_stored_program_recorded",
          (char *) &number_of_records_stored_program,
          SHOW_LONGLONG, SHOW_SCOPE_GLOBAL},
+        {"Htp_audit_authentication_flush_recorded",
+         (char *) &number_of_records_authentication_flush,
+         SHOW_LONGLONG, SHOW_SCOPE_GLOBAL},
+        {"Htp_audit_authentication_authid_create_recorded",
+         (char *) &number_of_records_authentication_authid_create,
+         SHOW_LONGLONG, SHOW_SCOPE_GLOBAL},
+        {"Htp_audit_authentication_credential_change_recorded",
+         (char *) &number_of_records_authentication_credential_change,
+         SHOW_LONGLONG, SHOW_SCOPE_GLOBAL},
+        {"Htp_audit_authentication_authid_rename_recorded",
+         (char *) &number_of_records_authentication_authid_rename,
+         SHOW_LONGLONG, SHOW_SCOPE_GLOBAL},
+        {"Htp_audit_authentication_authid_drop_recorded",
+         (char *) &number_of_records_authentication_authid_drop,
+         SHOW_LONGLONG, SHOW_SCOPE_GLOBAL},
         {0, 0, SHOW_UNDEF, SHOW_SCOPE_GLOBAL}
     };
 
@@ -1314,6 +1461,11 @@ void htp_audit_init_status()
   number_of_calls_global_variable_get = 0;
   number_of_calls_global_variable_set = 0;
   number_of_calls_stored_program = 0;
+  number_of_calls_authentication_flush = 0;
+  number_of_calls_authentication_authid_create = 0;
+  number_of_calls_authentication_credential_change = 0;
+  number_of_calls_authentication_authid_rename = 0;
+  number_of_calls_authentication_authid_drop = 0;
   number_of_records = 0;
   number_of_records_general_log = 0;
   number_of_records_general_error = 0;
@@ -1345,6 +1497,12 @@ void htp_audit_init_status()
   number_of_records_global_variable_get = 0;
   number_of_records_global_variable_set = 0;
   number_of_records_stored_program = 0;
+  number_of_records_authentication_flush = 0;
+  number_of_records_authentication_authid_create = 0;
+  number_of_records_authentication_credential_change = 0;
+  number_of_records_authentication_authid_rename = 0;
+  number_of_records_authentication_authid_drop = 0;
+  // todo
 
 }
 

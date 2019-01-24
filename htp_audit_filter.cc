@@ -19,13 +19,13 @@
 //#include <my_global.h>
 #include <mysql/plugin.h>
 #include <mysql/plugin_audit.h>
-//#include <sql_plugin.h>
+#include <sql/sql_plugin.h>
 //#include "htp_audit.h"
 #include <list>
 #include <ctype.h>
 #include <string>
 #include "config.h"
-//#include "sql/log.h"
+#include "sql/log.h"
 #include "htp_audit_filter.h"
 
 #if !defined(__attribute__) && (defined(__cplusplus) || !defined(__GNUC__) || __GNUC__ == 2 && __GNUC_MINOR__ < 8)
@@ -37,30 +37,31 @@ using namespace std;
 /*
   writing mysql log
 */
+
+
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsuggest-attribute=format"
+
 void
 htp_audit_logf(
     int level,       /*!< in: warning level */
-    const char *formatx, /*!< printf format */
+    const char *format, /*!< printf format */
     ...
 )
 {
-  char *str = NULL;
+  char *str;
   va_list args;
 
-  va_start(args, formatx);
+  va_start(args, format);
 
 #ifdef __WIN__
-  int		size = _vscprintf(format, args) + 1;
+  int   size = _vscprintf(format, args) + 1;
   str = static_cast<char*>(malloc(size));
   str[size - 1] = 0x0;
   vsnprintf(str, size, format, args);
 #elif HAVE_VASPRINTF
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Werror"
-  //vasprintf(&str, formatx, args);
-#pragma GCC diagnostic pop
-  //char buffer[1024 * 8];
-  //vsnprintf(buffer, sizeof(buffer), format, args);
+  vasprintf(&str, format, args);
 
 #else
   /* Use a fixed length string. */
@@ -68,13 +69,13 @@ htp_audit_logf(
   my_vsnprintf(str, BUFSIZ, format, args);
 #endif /* __WIN__ */
 
-  /*switch (level)
+  switch (level)
   {
     case HTP_AUDIT_LOG_LEVEL_INFO:
       sql_print_information("Htp Audit: %s", str);
       break;
     case HTP_AUDIT_LOG_LEVEL_WARN:
-      //sql_print_warning("Htp Audit: %s", str);
+      sql_print_warning("Htp Audit: %s", str);
       break;
     case HTP_AUDIT_LOG_LEVEL_ERROR:
       sql_print_error("Htp Audit: %s", str);
@@ -82,7 +83,7 @@ htp_audit_logf(
     case HTP_AUDIT_LOG_LEVEL_FATAL:
       sql_print_error("Htp Audit: %s", str);
       break;
-  }*/
+  }
 
   va_end(args);
   free(str);
@@ -91,6 +92,10 @@ htp_audit_logf(
   {
   }
 }
+
+
+#pragma GCC diagnostic pop
+
 
 /*
    审计的互斥保护
@@ -168,10 +173,12 @@ list<int> filters;
 filter_item_t filter_items[MAX_FILTER_ITEMS];
 static char filter_using_map[MAX_FILTER_ITEMS];
 
-/*int htp_audit_reorg_filter_item(filter_item_t *filter_item)
+int htp_audit_reorg_filter_item(filter_item_t *filter_item)
 {
+  // mysql 8.0 编译
+  filter_item = filter_item;
   return 0;
-};*/
+}
 
 inline int get_sub_class_index(const int sub_class)
 {
@@ -204,6 +211,7 @@ void htp_audit_init_filter_item(filter_item_t *item)
   item->audit_all_query = false;
   item->audit_all_table_access = false;
   item->audit_all_command = false;
+  item->audit_all_authentication = false;
   for (int i = 0; i < MAX_FILTER_GENERAL_EVENTS; i++)
   {
     item->general_events[i] = EVENT_UNSETTED;
@@ -235,6 +243,10 @@ void htp_audit_init_filter_item(filter_item_t *item)
   for (int i = 0; i < MAX_FILTER_COMMAND_EVENTS; i++)
   {
     item->command_events[i] = EVENT_UNSETTED;
+  }
+  for (int i = 0; i < MAX_FILTER_AUTHORIZATION_EVENTS; ++i)
+  {
+    item->authentication_events[i] = EVENT_UNSETTED;
   }
   item->command_setted = false;
   item->command[0] = 0;
@@ -576,6 +588,44 @@ static int htp_audit_get_event_init(
     *sub_class_int = EVENT_ALL;
     return 0;
   }
+  else if (strcasecmp(main_class, HTP_AUDIT_EVENT_AUTHENTICATION_CLASS) == 0)
+  {
+    *main_class_int = MYSQL_AUDIT_AUTHENTICATION_CLASS;
+    if (strlen(sub_class) == 0)
+    {
+      *sub_class_int = EVENT_ALL;
+      return 0;
+    }
+    if (strcasecmp(
+          sub_class, HTP_AUDIT_EVENT_AUTHENTICATION_FLUSH) == 0)
+    {
+      *sub_class_int = MYSQL_AUDIT_AUTHENTICATION_FLUSH;
+    }
+    else if (strcasecmp(
+              sub_class, HTP_AUDIT_EVENT_AUTHENTICATION_AUTHID_CREATE) == 0)
+    {
+      *sub_class_int = MYSQL_AUDIT_AUTHENTICATION_AUTHID_CREATE;
+    }
+    else if (strcasecmp(
+              sub_class, HTP_AUDIT_EVENT_AUTHENTICATION_CREDENTIAL_CHANGE) == 0)
+    {
+      *sub_class_int = MYSQL_AUDIT_AUTHENTICATION_CREDENTIAL_CHANGE;
+    }
+    else if (strcasecmp(
+              sub_class, HTP_AUDIT_EVENT_AUTHENTICATION_AUTHID_RENAME) == 0)
+    {
+      *sub_class_int = MYSQL_AUDIT_AUTHENTICATION_AUTHID_RENAME;
+    }
+    else if (strcasecmp(
+              sub_class, HTP_AUDIT_EVENT_AUTHENTICATION_AUTHID_DROP) == 0)
+    {
+      *sub_class_int = MYSQL_AUDIT_AUTHENTICATION_AUTHID_DROP;
+    }
+    else 
+    {
+      return -1;
+    }
+  }
   else
   {
     return -1;
@@ -721,11 +771,24 @@ static void htp_audit_fill_event(
     item->audit_event_stored_program = true;
     return;
   }
+  else if (main_class == MYSQL_AUDIT_AUTHENTICATION_CLASS)
+  {
+    DBUG_ASSERT(main_class == MYSQL_AUDIT_AUTHENTICATION_CLASS);
+    if (sub_class == EVENT_ALL)
+    {
+      item->audit_all_authentication = true;
+      for (int i = 0; i < MAX_FILTER_AUTHORIZATION_EVENTS; i++)
+      {
+        item->authentication_events[i] = EVENT_SETTED;
+      }
+    }
+    item->authentication_events[sub_class] = EVENT_SETTED;
+    return;
+  }
   else
   {
     return;
   }
-
 }
 
 int htp_audit_parse_event(const char *event, int event_len, filter_item_t *item)
@@ -1115,6 +1178,10 @@ int htp_audit_parse_filter(const char *filter_str, filter_item_t *item)
   {
     item->command_events[i] = -1;
   }
+  for (int i = 0; i < MAX_FILTER_AUTHENTICATION_EVENTS; ++i)
+  {
+    item->authentication_events[i] = -1;
+  }
 
   return htp_audit_parse_input(filter_str, item);
 }
@@ -1215,7 +1282,7 @@ int htp_audit_parse_remove_input(const char *remove_str, remove_parse_t *parse)
 }
 
 filter_result_enum
-htp_audit_filter_event(event_info_t *info, filter_item_t *item/*, unsigned int event_class*/)
+htp_audit_filter_event(event_info_t *info, filter_item_t *item, unsigned int event_class)
 {
   /*
   //host
@@ -1234,6 +1301,7 @@ htp_audit_filter_event(event_info_t *info, filter_item_t *item/*, unsigned int e
     return NOT_AUDIT_EVENT;
 */
   //event
+
   if (item->audit_all_event != true)
   {
     if (info->main_class == MYSQL_AUDIT_GENERAL_CLASS)
@@ -1280,6 +1348,11 @@ htp_audit_filter_event(event_info_t *info, filter_item_t *item/*, unsigned int e
     }
     else if (info->main_class == MYSQL_AUDIT_COMMAND_CLASS &&
         item->command_events[get_sub_class_index(info->sub_class)] != EVENT_SETTED)
+    {
+      return NOT_AUDIT_EVENT;
+    }
+    else if (info->main_class == MYSQL_AUDIT_AUTHENTICATION_CLASS &&
+        item->authentication_events[get_sub_class_index(info->sub_class)] != EVENT_SETTED)
     {
       return NOT_AUDIT_EVENT;
     }
@@ -1353,7 +1426,8 @@ htp_audit_filter_event(event_info_t *info, filter_item_t *item/*, unsigned int e
       }
     }
   }
-
+  // mysql 8.0 编译
+  event_class = event_class;
   return AUDIT_EVENT;
 }
 

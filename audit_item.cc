@@ -1180,3 +1180,226 @@ void audit_stored_program_event(const struct mysql_event_stored_program *event)
   cJSON_Delete(root);
   free(json_str);
 }
+
+
+// MYSQL_AUDIT_AUTHENTICATION_ALL
+
+void audit_authentication_flush(const struct mysql_event_authentication *event)
+{
+  DBUG_ASSERT(event->event_subclass == MYSQL_AUDIT_AUTHENTICATION_FLUSH);
+    char current_str[100];
+  //to do : 获取当前时间
+  time_t current;
+  struct tm current_broken;
+  current = time(NULL);
+  localtime_r(&current, &current_broken);
+
+  strftime(current_str, sizeof(current_str), "%F %T", &current_broken);
+
+  cJSON *root;
+  root = cJSON_CreateObject();
+  cJSON_AddItemToObject(root, "timestamp", cJSON_CreateString(current_str));
+  cJSON_AddItemToObject(root, "type", cJSON_CreateString("authentication"));
+  cJSON_AddItemToObject(root, "sub type", cJSON_CreateString("flush"));
+  cJSON_AddItemToObject(root, "status", cJSON_CreateNumber(event->status));
+  cJSON_AddItemToObject(root, "connection_id", cJSON_CreateNumber(event->connection_id));
+  cJSON_AddItemToObject(root, "sql_command_id", cJSON_CreateNumber(event->sql_command_id));
+  if (event->query.length > 0)
+    cJSON_AddItemToObject(root, "query", cJSON_CreateString(event->query.str));
+  // todo: query_charset
+  if (event->user.length > 0)
+    cJSON_AddItemToObject(root, "user", cJSON_CreateString(event->user.str));
+  if (event->host.length > 0)
+    cJSON_AddItemToObject(root, "host", cJSON_CreateString(event->host.str));
+  if (event->authentication_plugin.length > 0)
+    cJSON_AddItemToObject(root, "authentication_plugin", 
+      cJSON_CreateString(event->authentication_plugin.str));
+  if (event->new_user.length > 0)
+    cJSON_AddItemToObject(root, "new_user", cJSON_CreateString(event->new_user.str));
+  if (event->new_host.length > 0)
+    cJSON_AddItemToObject(root, "new_host", cJSON_CreateString(event->new_host.str));
+  cJSON_AddItemToObject(root, "is_role", cJSON_CreateBool(event->is_role));
+  //获得json字符串，输出到审计日志
+  char *json_str = cJSON_Print(root);
+  Logger::GetLogger()->Write(json_str, ",");
+
+  //释放资源
+  cJSON_Delete(root);
+  free(json_str);
+}
+
+void audit_authentication_authid_create(const struct mysql_event_authentication *event)
+{
+  DBUG_ASSERT(event->event_subclass == MYSQL_AUDIT_AUTHENTICATION_AUTHID_CREATE);
+  char current_str[100];
+  //to do : 获取当前时间
+  time_t current;
+  struct tm current_broken;
+  current = time(NULL);
+  localtime_r(&current, &current_broken);
+
+  strftime(current_str, sizeof(current_str), "%F %T", &current_broken);
+
+  cJSON *root;
+  root = cJSON_CreateObject();
+  cJSON_AddItemToObject(root, "timestamp", cJSON_CreateString(current_str));
+  cJSON_AddItemToObject(root, "type", cJSON_CreateString("authentication"));
+  cJSON_AddItemToObject(root, "sub type", cJSON_CreateString("authid_create"));
+  cJSON_AddItemToObject(root, "status", cJSON_CreateNumber(event->status));
+  cJSON_AddItemToObject(root, "connection_id", cJSON_CreateNumber(event->connection_id));
+  cJSON_AddItemToObject(root, "sql_command_id", cJSON_CreateNumber(event->sql_command_id));
+  if (event->query.length > 0)
+    cJSON_AddItemToObject(root, "query", cJSON_CreateString(event->query.str));
+  // todo: query_charset
+  if (event->user.length > 0)
+    cJSON_AddItemToObject(root, "user", cJSON_CreateString(event->user.str));
+  if (event->host.length > 0)
+    cJSON_AddItemToObject(root, "host", cJSON_CreateString(event->host.str));
+  if (event->authentication_plugin.length > 0)
+    cJSON_AddItemToObject(root, "authentication_plugin", 
+      cJSON_CreateString(event->authentication_plugin.str));
+  if (event->new_user.length > 0)
+    cJSON_AddItemToObject(root, "new_user", cJSON_CreateString(event->new_user.str));
+  if (event->new_host.length > 0)
+    cJSON_AddItemToObject(root, "new_host", cJSON_CreateString(event->new_host.str));
+  cJSON_AddItemToObject(root, "is_role", cJSON_CreateBool(event->is_role));
+  //获得json字符串，输出到审计日志
+  char *json_str = cJSON_Print(root);
+  Logger::GetLogger()->Write(json_str, ",");
+
+  //释放资源
+  cJSON_Delete(root);
+  free(json_str);
+}
+
+void audit_authentication_credential_change(const struct mysql_event_authentication *event)
+{
+  DBUG_ASSERT(event->event_subclass == MYSQL_AUDIT_AUTHENTICATION_CREDENTIAL_CHANGE);
+    char current_str[100];
+  //to do : 获取当前时间
+  time_t current;
+  struct tm current_broken;
+  current = time(NULL);
+  localtime_r(&current, &current_broken);
+
+  strftime(current_str, sizeof(current_str), "%F %T", &current_broken);
+
+  cJSON *root;
+  root = cJSON_CreateObject();
+  cJSON_AddItemToObject(root, "timestamp", cJSON_CreateString(current_str));
+  cJSON_AddItemToObject(root, "type", cJSON_CreateString("authentication"));
+  cJSON_AddItemToObject(root, "sub type", cJSON_CreateString("credential change"));
+  cJSON_AddItemToObject(root, "status", cJSON_CreateNumber(event->status));
+  cJSON_AddItemToObject(root, "connection_id", cJSON_CreateNumber(event->connection_id));
+  cJSON_AddItemToObject(root, "sql_command_id", cJSON_CreateNumber(event->sql_command_id));
+  if (event->query.length > 0)
+    cJSON_AddItemToObject(root, "query", cJSON_CreateString(event->query.str));
+  // todo: query_charset
+  if (event->user.length > 0)
+    cJSON_AddItemToObject(root, "user", cJSON_CreateString(event->user.str));
+  if (event->host.length > 0)
+    cJSON_AddItemToObject(root, "host", cJSON_CreateString(event->host.str));
+  if (event->authentication_plugin.length > 0)
+    cJSON_AddItemToObject(root, "authentication_plugin", 
+      cJSON_CreateString(event->authentication_plugin.str));
+  if (event->new_user.length > 0)
+    cJSON_AddItemToObject(root, "new_user", cJSON_CreateString(event->new_user.str));
+  if (event->new_host.length > 0)
+    cJSON_AddItemToObject(root, "new_host", cJSON_CreateString(event->new_host.str));
+  cJSON_AddItemToObject(root, "is_role", cJSON_CreateBool(event->is_role));
+  //获得json字符串，输出到审计日志
+  char *json_str = cJSON_Print(root);
+  Logger::GetLogger()->Write(json_str, ",");
+
+  //释放资源
+  cJSON_Delete(root);
+  free(json_str);
+}
+
+void audit_authentication_authid_rename(const struct mysql_event_authentication *event)
+{
+  DBUG_ASSERT(event->event_subclass == MYSQL_AUDIT_AUTHENTICATION_AUTHID_RENAME);
+    char current_str[100];
+  //to do : 获取当前时间
+  time_t current;
+  struct tm current_broken;
+  current = time(NULL);
+  localtime_r(&current, &current_broken);
+
+  strftime(current_str, sizeof(current_str), "%F %T", &current_broken);
+
+  cJSON *root;
+  root = cJSON_CreateObject();
+  cJSON_AddItemToObject(root, "timestamp", cJSON_CreateString(current_str));
+  cJSON_AddItemToObject(root, "type", cJSON_CreateString("authentication"));
+  cJSON_AddItemToObject(root, "sub type", cJSON_CreateString("authid rename"));
+  cJSON_AddItemToObject(root, "status", cJSON_CreateNumber(event->status));
+  cJSON_AddItemToObject(root, "connection_id", cJSON_CreateNumber(event->connection_id));
+  cJSON_AddItemToObject(root, "sql_command_id", cJSON_CreateNumber(event->sql_command_id));
+  if (event->query.length > 0)
+    cJSON_AddItemToObject(root, "query", cJSON_CreateString(event->query.str));
+  // todo: query_charset
+  if (event->user.length > 0)
+    cJSON_AddItemToObject(root, "user", cJSON_CreateString(event->user.str));
+  if (event->host.length > 0)
+    cJSON_AddItemToObject(root, "host", cJSON_CreateString(event->host.str));
+  if (event->authentication_plugin.length > 0)
+    cJSON_AddItemToObject(root, "authentication_plugin", 
+      cJSON_CreateString(event->authentication_plugin.str));
+  if (event->new_user.length > 0)
+    cJSON_AddItemToObject(root, "new_user", cJSON_CreateString(event->new_user.str));
+  if (event->new_host.length > 0)
+    cJSON_AddItemToObject(root, "new_host", cJSON_CreateString(event->new_host.str));
+  cJSON_AddItemToObject(root, "is_role", cJSON_CreateBool(event->is_role));
+  //获得json字符串，输出到审计日志
+  char *json_str = cJSON_Print(root);
+  Logger::GetLogger()->Write(json_str, ",");
+
+  //释放资源
+  cJSON_Delete(root);
+  free(json_str);
+}
+
+void audit_authentication_authid_drop(const struct mysql_event_authentication *event)
+{
+  DBUG_ASSERT(event->event_subclass == MYSQL_AUDIT_AUTHENTICATION_AUTHID_DROP);
+    char current_str[100];
+  //to do : 获取当前时间
+  time_t current;
+  struct tm current_broken;
+  current = time(NULL);
+  localtime_r(&current, &current_broken);
+
+  strftime(current_str, sizeof(current_str), "%F %T", &current_broken);
+
+  cJSON *root;
+  root = cJSON_CreateObject();
+  cJSON_AddItemToObject(root, "timestamp", cJSON_CreateString(current_str));
+  cJSON_AddItemToObject(root, "type", cJSON_CreateString("authentication"));
+  cJSON_AddItemToObject(root, "sub type", cJSON_CreateString("authid drop"));
+  cJSON_AddItemToObject(root, "status", cJSON_CreateNumber(event->status));
+  cJSON_AddItemToObject(root, "connection_id", cJSON_CreateNumber(event->connection_id));
+  cJSON_AddItemToObject(root, "sql_command_id", cJSON_CreateNumber(event->sql_command_id));
+  if (event->query.length > 0)
+    cJSON_AddItemToObject(root, "query", cJSON_CreateString(event->query.str));
+  // todo: query_charset
+  if (event->user.length > 0)
+    cJSON_AddItemToObject(root, "user", cJSON_CreateString(event->user.str));
+  if (event->host.length > 0)
+    cJSON_AddItemToObject(root, "host", cJSON_CreateString(event->host.str));
+  if (event->authentication_plugin.length > 0)
+    cJSON_AddItemToObject(root, "authentication_plugin", 
+      cJSON_CreateString(event->authentication_plugin.str));
+  if (event->new_user.length > 0)
+    cJSON_AddItemToObject(root, "new_user", cJSON_CreateString(event->new_user.str));
+  if (event->new_host.length > 0)
+    cJSON_AddItemToObject(root, "new_host", cJSON_CreateString(event->new_host.str));
+  cJSON_AddItemToObject(root, "is_role", cJSON_CreateBool(event->is_role));
+  //获得json字符串，输出到审计日志
+  char *json_str = cJSON_Print(root);
+  Logger::GetLogger()->Write(json_str, ",");
+
+  //释放资源
+  cJSON_Delete(root);
+  free(json_str);
+}

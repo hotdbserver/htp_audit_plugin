@@ -16,6 +16,7 @@
 */
 
 #include <stdio.h>
+#include <mysql_version.h>
 #include <string.h>
 //#include <my_global.h>
 #include <list>
@@ -231,7 +232,7 @@ static int htp_audit_rules_from_config(config_group_t *group)
 
   //将filter加入
   htp_audit_add_filter(&filter_item);
-
+  
   return (0);
 }
 
@@ -487,6 +488,7 @@ static int htp_audit_notify(MYSQL_THD thd,
   Plugin type-specific descriptor
 */
 
+
 static struct st_mysql_audit htp_audit_descriptor =
     {
         MYSQL_AUDIT_INTERFACE_VERSION,                    /* interface version    */
@@ -502,7 +504,8 @@ static struct st_mysql_audit htp_audit_descriptor =
          (unsigned long) MYSQL_AUDIT_SERVER_SHUTDOWN_ALL,
          (unsigned long) MYSQL_AUDIT_COMMAND_ALL,
          (unsigned long) MYSQL_AUDIT_QUERY_ALL,
-         (unsigned long) MYSQL_AUDIT_STORED_PROGRAM_ALL}
+         (unsigned long) MYSQL_AUDIT_STORED_PROGRAM_ALL,
+         (unsigned long) MYSQL_AUDIT_AUTHENTICATION_ALL}
     };
 
 /*
