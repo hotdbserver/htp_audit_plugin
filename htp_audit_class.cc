@@ -293,7 +293,7 @@ htp_audit_process_auth_event(
 }
 
 static int htp_audit_process_startup_event(
-    MYSQL_THD thd __attribute__((unused)), unsigned int event_class, const void *event)
+    MYSQL_THD thd __attribute__((unused)), unsigned int event_class __attribute__((unused)), const void *event __attribute__((unused)))
 {
   //const struct mysql_event_server_startup *event_startup =
   //    (const struct mysql_event_server_startup *) event;
@@ -301,10 +301,6 @@ static int htp_audit_process_startup_event(
   number_of_calls_server_startup_incr();
   number_of_records_server_startup_incr();
 
-
-  // mysql 8.0 编译
-  event_class = event_class;
-  event = event;
 
 
   return 0;
@@ -566,7 +562,7 @@ static int htp_audit_process_authentication_event(MYSQL_THD thd __attribute__((u
   info.main_class = MYSQL_AUDIT_AUTHENTICATION_CLASS;
   info.sub_class = event_auth->event_subclass;
 
-  switch (event_auth->event_subclass) 
+  switch (event_auth->event_subclass)
   {
     case MYSQL_AUDIT_AUTHENTICATION_FLUSH:
       number_of_calls_authentication_flush_incr();

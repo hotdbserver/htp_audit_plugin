@@ -28,9 +28,11 @@
 #include "sql/log.h"
 #include "htp_audit_filter.h"
 
+/*
 #if !defined(__attribute__) && (defined(__cplusplus) || !defined(__GNUC__) || __GNUC__ == 2 && __GNUC_MINOR__ < 8)
 #define __attribute__(A)
 #endif
+*/
 
 using namespace std;
 
@@ -173,10 +175,8 @@ list<int> filters;
 filter_item_t filter_items[MAX_FILTER_ITEMS];
 static char filter_using_map[MAX_FILTER_ITEMS];
 
-int htp_audit_reorg_filter_item(filter_item_t *filter_item)
+int htp_audit_reorg_filter_item(filter_item_t *filter_item __attribute__((unused)))
 {
-  // mysql 8.0 编译
-  filter_item = filter_item;
   return 0;
 }
 
@@ -621,7 +621,7 @@ static int htp_audit_get_event_init(
     {
       *sub_class_int = MYSQL_AUDIT_AUTHENTICATION_AUTHID_DROP;
     }
-    else 
+    else
     {
       return -1;
     }
@@ -1282,7 +1282,7 @@ int htp_audit_parse_remove_input(const char *remove_str, remove_parse_t *parse)
 }
 
 filter_result_enum
-htp_audit_filter_event(event_info_t *info, filter_item_t *item, unsigned int event_class)
+htp_audit_filter_event(event_info_t *info, filter_item_t *item, unsigned int event_class __attribute__((unused)))
 {
   /*
   //host
@@ -1426,8 +1426,6 @@ htp_audit_filter_event(event_info_t *info, filter_item_t *item, unsigned int eve
       }
     }
   }
-  // mysql 8.0 编译
-  event_class = event_class;
   return AUDIT_EVENT;
 }
 
@@ -1451,5 +1449,3 @@ filter_result_enum htp_audit_filter_event(event_info_t *info, unsigned int event
   }
   return NOT_AUDIT_EVENT;
 }
-
-
