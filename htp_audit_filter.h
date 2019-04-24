@@ -367,6 +367,18 @@ struct event_info_struct
   const char *sql_command;
   const char *database;
   const char *table;
+  event_info_struct()
+  {
+    host = NULL;
+    ip = NULL;
+    user = NULL;
+    command = NULL;
+    query = NULL;
+    name = NULL;
+    sql_command = NULL;
+    database = NULL;
+    table = NULL;
+  }
 };
 typedef struct event_info_struct event_info_t;
 
