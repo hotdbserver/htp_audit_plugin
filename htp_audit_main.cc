@@ -517,7 +517,7 @@ mysql_declare_plugin(htp_audit)
             MYSQL_AUDIT_PLUGIN,           /* type                               */
             &htp_audit_descriptor,        /* descriptor                         */
             "HTP_AUDIT",                  /* name, install plugin's plugin_name */
-            "HotPU Corp Jiangyx & Haogq", /* author                             */
+            "HotPU Corp Jiangyx & Haogq & Huo", /* author                             */
             "Htp audit plugin",           /* description                        */
             PLUGIN_LICENSE_GPL,
             htp_audit_plugin_init,        /* init function (when loaded)     */

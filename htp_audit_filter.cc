@@ -1219,12 +1219,12 @@ int htp_audit_parse_remove_input(const char *remove_str, remove_parse_t *parse)
 filter_result_enum
 htp_audit_filter_event(event_info_t *info, filter_item_t *item, unsigned int event_class)
 {
-  /*
+  
   //host
   if ((info->ip != NULL && strlen(info->ip) != 0
        && item->host_length != 0
        && strncmp(info->ip, item->host, item->host_length) != 0)
-      &&
+      ||
       (info->host != NULL && strlen(info->host) != 0
        && item->host_length != 0
        && strncmp(info->host, item->host, item->host_length) != 0))
@@ -1234,7 +1234,7 @@ htp_audit_filter_event(event_info_t *info, filter_item_t *item, unsigned int eve
       && item->user_length != 0
       && strncmp(info->user, item->user, item->user_length) != 0)
     return NOT_AUDIT_EVENT;
-*/
+
   //event
   if (item->audit_all_event != true)
   {
@@ -1328,7 +1328,9 @@ htp_audit_filter_event(event_info_t *info, filter_item_t *item, unsigned int eve
     {
       if (info->query != NULL && strlen(info->query) != 0)
       {
-        /*char tmp_info_query[MAX_FILTER_SQL_KEYWORD_BUFFER_SIZE];
+        /*
+        大小写转换
+        char tmp_info_query[MAX_FILTER_SQL_KEYWORD_BUFFER_SIZE];
         char tmp_item_keyword[MAX_FILTER_SQL_KEYWORD_BUFFER_SIZE];
 
         strncpy(tmp_info_query, info->query
