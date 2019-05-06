@@ -254,11 +254,11 @@ static int htp_audit_general_from_config(config_group_t *group)
     {
       if (strcasecmp(item->value, "1") == 0 || strcasecmp(item->value, "on") == 0)
       {
-        enable_buffer = TRUE;
+        enable_buffer = true;
       }
       else if (strcasecmp(item->value, "off") == 0 || strcasecmp(item->value, "0") == 0)
       {
-        enable_buffer = FALSE;
+        enable_buffer = false;
       }
       else
       {

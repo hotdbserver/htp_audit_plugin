@@ -42,13 +42,13 @@ char htp_audit_error_log_file[HTP_AUDIT_CONFIG_MAX_FILE_NAME + 1];
 
 char *log_file = NULL;
 char *error_log_file = NULL;
-bool enable_buffer = FALSE;
+bool enable_buffer = false;
 
 static char *rules = NULL;
 static char *add_rule = NULL;
 static char *remove_rule = NULL;
 
-static bool flush_log = FALSE;
+static bool flush_log = false;
 static int buffer_size = 32;  //measure in KB.32 means 32KB
 static char version_inner[] = HTP_AUDIT_VERSION;
 static char *version = version_inner;
@@ -1642,7 +1642,7 @@ static MYSQL_SYSVAR_BOOL(enable_buffer, enable_buffer
 , "set whether use buffer to store audit record"
 , NULL
 , htp_audit_set_enable_buffer_update
-, FALSE);
+, false);
 
 static MYSQL_SYSVAR_BOOL(flush_log, flush_log
 , PLUGIN_VAR_NOCMDOPT
@@ -1650,7 +1650,7 @@ static MYSQL_SYSVAR_BOOL(flush_log, flush_log
 , "set whether use buffer to store audit record"
 , htp_audit_flush_log_validate
 , htp_audit_flush_log_update
-, FALSE);
+, false);
 
 static MYSQL_SYSVAR_INT(buffer_size, buffer_size
 , PLUGIN_VAR_NOCMDOPT
@@ -1919,7 +1919,7 @@ static void htp_audit_set_enable_buffer_update(
   if (nvalue == enable_buffer)
     DBUG_VOID_RETURN;
 
-  if (nvalue == FALSE) {
+  if (nvalue == false) {
     Logger::GetLogger()->EnableBuffer(false);
     Logger::GetELogger()->EnableBuffer(false);
   }
