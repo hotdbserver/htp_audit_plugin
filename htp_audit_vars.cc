@@ -93,8 +93,8 @@ const char *connection_events[] = {
 };
 
 const char *parse_events[] = {
-    HTP_AUDIT_EVENT_PARSE_SUB_PREPARE,
-    HTP_AUDIT_EVENT_PARSE_SUB_POSTPARE
+    HTP_AUDIT_EVENT_PARSE_SUB_PREPARSE,
+    HTP_AUDIT_EVENT_PARSE_SUB_POSTPARSE
 };
 
 const char *authorization_events[] = {

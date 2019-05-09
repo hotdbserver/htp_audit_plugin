@@ -156,8 +156,8 @@ void htp_audit_deinit_lock();
 
 // parse events
 #define HTP_AUDIT_EVENT_PARSE_CLASS "parse"
-#define HTP_AUDIT_EVENT_PARSE_SUB_PREPARE "prepare"
-#define HTP_AUDIT_EVENT_PARSE_SUB_POSTPARE "postpare"
+#define HTP_AUDIT_EVENT_PARSE_SUB_PREPARSE "preparse"
+#define HTP_AUDIT_EVENT_PARSE_SUB_POSTPARSE "postparse"
 
 // authorization events
 #define HTP_AUDIT_EVENT_AUTHORIZATION_CLASS "authorization"

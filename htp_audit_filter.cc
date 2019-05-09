@@ -384,12 +384,12 @@ static int htp_audit_get_event_init(
       return 0;
     }
     if (strcasecmp(
-        sub_class, HTP_AUDIT_EVENT_PARSE_SUB_PREPARE) == 0)
+        sub_class, HTP_AUDIT_EVENT_PARSE_SUB_PREPARSE) == 0)
     {
       *sub_class_int = MYSQL_AUDIT_PARSE_PREPARSE;
     }
     else if (strcasecmp(
-        sub_class, HTP_AUDIT_EVENT_PARSE_SUB_POSTPARE) == 0)
+        sub_class, HTP_AUDIT_EVENT_PARSE_SUB_POSTPARSE) == 0)
     {
       *sub_class_int = MYSQL_AUDIT_PARSE_POSTPARSE;
     }
